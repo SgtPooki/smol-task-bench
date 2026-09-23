@@ -1,0 +1,30 @@
+{"id": "event-01", "text": "Dentist appointment confirmed for October 6, 2026 at 2:30 PM. Please arrive 10 minutes early.", "expected": {"date": "2026-10-06", "startTime": "14:30", "durationMinutes": null}}
+{"id": "event-02", "text": "Hey! Lunch tomorrow at noon at the Thai place on 5th?", "expected": {"date": "2026-09-24", "startTime": "12:00", "durationMinutes": null}}
+{"id": "event-03", "text": "Reminder: quarterly planning is this Friday from 9 to 11am in the big conference room.", "expected": {"date": "2026-09-25", "startTime": "09:00", "durationMinutes": 120}}
+{"id": "event-04", "text": "Can we move our 1:1 to next Tuesday at 3pm? Same Zoom link, 30 min.", "expected": {"date": "2026-09-29", "startTime": "15:00", "durationMinutes": 30}}
+{"id": "event-05", "text": "Your flight UA 1432 departs Nov 2 at 07:15 from SFO.", "expected": {"date": "2026-11-02", "startTime": "07:15", "durationMinutes": null}}
+{"id": "event-06", "text": "Book club meets Sunday at 4 \u2014 bring snacks! We usually go about two hours.", "expected": {"date": "2026-09-27", "startTime": "16:00", "durationMinutes": 120}}
+{"id": "event-07", "text": "The plumber will come by on Monday between 8 and 10 in the morning.", "expected": {"date": "2026-09-28", "startTime": "08:00", "durationMinutes": 120}}
+{"id": "event-08", "text": "Team offsite: October 15th, 9:30am\u20134:30pm, Riverside Hall.", "expected": {"date": "2026-10-15", "startTime": "09:30", "durationMinutes": 420}}
+{"id": "event-09", "text": "Pickup for the kids' soccer practice is at 5:45pm today.", "expected": {"date": "2026-09-23", "startTime": "17:45", "durationMinutes": null}}
+{"id": "event-10", "text": "Webinar: 'Intro to ZFS' on 2026-10-01 at 18:00 UTC, runs 90 minutes.", "expected": {"date": "2026-10-01", "startTime": "18:00", "durationMinutes": 90}}
+{"id": "event-11", "text": "Let's do the code review Thursday at 10:15, should take 45 minutes max.", "expected": {"date": "2026-09-24", "startTime": "10:15", "durationMinutes": 45}}
+{"id": "event-12", "text": "Parent-teacher conference scheduled for 10/08 at 6:30 PM (15-minute slot).", "expected": {"date": "2026-10-08", "startTime": "18:30", "durationMinutes": 15}}
+{"id": "event-13", "text": "Can you make a call the day after tomorrow at 11? Only need 20 min.", "expected": {"date": "2026-09-25", "startTime": "11:00", "durationMinutes": 20}}
+{"id": "event-14", "text": "Oil change booked for Saturday, 8 AM sharp.", "expected": {"date": "2026-09-26", "startTime": "08:00", "durationMinutes": null}}
+{"id": "event-15", "text": "Your vaccination appointment: Tue 13 Oct 2026, 09:40.", "expected": {"date": "2026-10-13", "startTime": "09:40", "durationMinutes": null}}
+{"id": "event-16", "text": "Standup is moved to 9:05 starting next Monday.", "expected": {"date": "2026-09-28", "startTime": "09:05", "durationMinutes": null}}
+{"id": "event-17", "text": "Concert tickets: December 12, doors 7pm, show at 8pm.", "expected": {"date": "2026-12-12", "startTime": "20:00", "durationMinutes": null}}
+{"id": "event-18", "text": "Movie night next Friday at 7:30pm, a 3 hour epic so plan accordingly.", "expected": {"date": "2026-09-25", "startTime": "19:30", "durationMinutes": 180}}
+{"id": "event-19", "text": "Interview with Acme Corp on Oct 20 at 1pm Pacific; it's a 1-hour panel.", "expected": {"date": "2026-10-20", "startTime": "13:00", "durationMinutes": 60}}
+{"id": "event-20", "text": "Garbage pickup changed to Thursdays at 6am.", "expected": {"date": "2026-09-24", "startTime": "06:00", "durationMinutes": null}}
+{"id": "event-21", "text": "Yoga class tonight 8:15\u20139:00pm.", "expected": {"date": "2026-09-23", "startTime": "20:15", "durationMinutes": 45}}
+{"id": "event-22", "text": "Vet checkup for Luna on September 30 at 4:20pm.", "expected": {"date": "2026-09-30", "startTime": "16:20", "durationMinutes": null}}
+{"id": "event-23", "text": "Board meeting Monday 28 September, 14:00\u201315:30 CET.", "expected": {"date": "2026-09-28", "startTime": "14:00", "durationMinutes": 90}}
+{"id": "event-24", "text": "Haircut next Wednesday at half past ten in the morning.", "expected": {"date": "2026-09-30", "startTime": "10:30", "durationMinutes": null}}
+{"id": "event-25", "text": "The furnace inspection is at 1 o'clock on the 2nd of October, about an hour.", "expected": {"date": "2026-10-02", "startTime": "13:00", "durationMinutes": 60}}
+{"id": "event-26", "text": "Hackathon kicks off on Friday October 9 at 6pm and runs 24 hours.", "expected": {"date": "2026-10-09", "startTime": "18:00", "durationMinutes": 1440}}
+{"id": "event-27", "text": "Pay the property tax by Nov 30 \u2014 portal closes at 5pm.", "expected": {"date": "2026-11-30", "startTime": "17:00", "durationMinutes": null}}
+{"id": "event-28", "text": "Coffee with Sam in two weeks, same time as today: 8:45am.", "expected": {"date": "2026-10-07", "startTime": "08:45", "durationMinutes": null}}
+{"id": "event-29", "text": "Election day is Tuesday, November 3, 2026; polls open at 7 AM.", "expected": {"date": "2026-11-03", "startTime": "07:00", "durationMinutes": null}}
+{"id": "event-30", "text": "Family dinner at mom's this Saturday at 6:30 in the evening.", "expected": {"date": "2026-09-26", "startTime": "18:30", "durationMinutes": null}}

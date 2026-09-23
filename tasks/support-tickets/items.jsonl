@@ -1,0 +1,30 @@
+{"id": "ticket-01", "text": "Hi, I was charged twice for my March subscription. Can you refund the duplicate charge when you get a chance?", "expected": {"category": "billing", "urgent": false}}
+{"id": "ticket-02", "text": "Can I get an invoice with our company VAT number on it? Accounting needs it for last quarter.", "expected": {"category": "billing", "urgent": false}}
+{"id": "ticket-03", "text": "Your system charged my card $4,800 instead of $48. That is my rent money. Please reverse this TODAY.", "expected": {"category": "billing", "urgent": true}}
+{"id": "ticket-04", "text": "How do I switch from monthly to annual billing? I'd like the discount.", "expected": {"category": "billing", "urgent": false}}
+{"id": "ticket-05", "text": "Is there a student discount? I just started at university.", "expected": {"category": "billing", "urgent": false}}
+{"id": "ticket-06", "text": "Our payment failed and the dashboard says the account will be suspended in 2 hours. We have a launch tonight, please help.", "expected": {"category": "billing", "urgent": true}}
+{"id": "ticket-07", "text": "The dark mode toggle doesn't remember my setting after I log out. Minor, just FYI.", "expected": {"category": "bug", "urgent": false}}
+{"id": "ticket-08", "text": "Since this morning's update none of our users can save documents \u2014 every save throws 'Error 500'. Our whole team is blocked.", "expected": {"category": "bug", "urgent": true}}
+{"id": "ticket-09", "text": "Typo on the pricing page: 'Proffesional' should be 'Professional'.", "expected": {"category": "bug", "urgent": false}}
+{"id": "ticket-10", "text": "CSV export puts the date column in the wrong timezone. Workaround is fine for now.", "expected": {"category": "bug", "urgent": false}}
+{"id": "ticket-11", "text": "Data is being deleted! When two people edit the same record, one person's changes vanish completely. We've lost a day of work.", "expected": {"category": "bug", "urgent": true}}
+{"id": "ticket-12", "text": "The mobile app crashes when I rotate the screen on the settings page. Android 15, Pixel 8.", "expected": {"category": "bug", "urgent": false}}
+{"id": "ticket-13", "text": "Would love a keyboard shortcut to archive items. Would save me a lot of clicks.", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-14", "text": "Any plans to support SSO with Okta? It would help us roll this out company-wide next year.", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-15", "text": "Could you add a way to export reports as PDF?", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-16", "text": "Please add Webhooks for when a task is completed so we can hook it into Slack.", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-17", "text": "It would be nice if the calendar view could start the week on Monday.", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-18", "text": "Suggestion: let us pin favorite projects to the top of the sidebar.", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-19", "text": "I changed my email address and now I'm not sure which one to log in with. Can you check?", "expected": {"category": "account-access", "urgent": false}}
+{"id": "ticket-20", "text": "I'm locked out and our payroll runs in one hour \u2014 I'm the only admin. The 2FA codes aren't arriving.", "expected": {"category": "account-access", "urgent": true}}
+{"id": "ticket-21", "text": "How do I add a second admin to our workspace?", "expected": {"category": "account-access", "urgent": false}}
+{"id": "ticket-22", "text": "Someone changed my password and email without my permission. I think my account was hacked, please lock it now.", "expected": {"category": "account-access", "urgent": true}}
+{"id": "ticket-23", "text": "The password reset email went to spam, but it worked. Maybe look at your email settings?", "expected": {"category": "account-access", "urgent": false}}
+{"id": "ticket-24", "text": "Can you delete my old account under my personal email? I only use the work one now.", "expected": {"category": "account-access", "urgent": false}}
+{"id": "ticket-25", "text": "My order #10442 says shipped but tracking hasn't updated in 3 days. Any news?", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-26", "text": "Can I change the delivery address on an order I placed an hour ago?", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-27", "text": "The replacement insulin cooler I ordered hasn't arrived and my medication will spoil tomorrow. Where is it?", "expected": {"category": "shipping", "urgent": true}}
+{"id": "ticket-28", "text": "Do you ship to Canada? I didn't see it in the country list.", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-29", "text": "Package arrived with a dented box but the item inside seems fine. Just letting you know.", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-30", "text": "Wrong item delivered for our wedding tomorrow \u2014 we got 12 chairs instead of 120. We need the rest urgently.", "expected": {"category": "shipping", "urgent": true}}

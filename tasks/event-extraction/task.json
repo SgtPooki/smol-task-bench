@@ -1,0 +1,30 @@
+{
+  "name": "event",
+  "description": "Short messages mentioning one event (hand-written), including relative dates. Reference date: Wednesday 2026-09-23.",
+  "instructions": "Today is Wednesday, September 23, 2026. Extract the single event mentioned in the message. date is YYYY-MM-DD; relative weekdays ('Friday', 'this Friday', 'next Friday') mean the first such weekday after today. startTime is 24-hour HH:MM. durationMinutes is the length in minutes if the message states an end time or duration, otherwise omit it.",
+  "prompt": "Message:\n{text}",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "date": {
+        "type": "string"
+      },
+      "startTime": {
+        "type": "string"
+      },
+      "durationMinutes": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "date",
+      "startTime"
+    ],
+    "additionalProperties": false
+  },
+  "fields": {
+    "date": "exact",
+    "startTime": "exact",
+    "durationMinutes": "number"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "log_triage",
+  "description": "Homelab syslog/app log lines (hand-written). Identify the emitting program and severity.",
+  "instructions": "You triage single homelab log lines. service is the name of the program that emitted the line exactly as it appears (the syslog tag before [pid] or ':', e.g. 'sshd', 'kernel', 'CRON'; for nginx access or error log format, 'nginx'; for PostgreSQL log format, 'postgres'). severity is one of: info (routine, normal operation), warn (degraded or unusual but still working; worth watching), error (an operation failed; partial breakage), critical (hardware failure, data-loss risk, or a service is down).",
+  "prompt": "Log line:\n{text}",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "service": {
+        "type": "string"
+      },
+      "severity": {
+        "type": "string",
+        "enum": [
+          "info",
+          "warn",
+          "error",
+          "critical"
+        ]
+      }
+    },
+    "required": [
+      "service",
+      "severity"
+    ],
+    "additionalProperties": false
+  },
+  "fields": {
+    "service": "exact",
+    "severity": "exact"
+  }
+}

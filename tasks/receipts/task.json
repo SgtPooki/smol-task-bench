@@ -1,0 +1,16 @@
+{
+  "name": "receipt",
+  "description": "Photographed Indonesian retail receipts (CORD-v2 test split). Extract the final total and count line items.",
+  "instructions": "You extract data from receipt photos. total is the final amount paid, as a plain integer with no currency symbol and no thousands separators (for example 'Rp 60.000' is 60000). itemCount is the number of distinct purchased line items listed on the receipt.",
+  "prompt": "Extract the total and item count from this receipt.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "total": {"type": "integer"},
+      "itemCount": {"type": "integer"}
+    },
+    "required": ["total", "itemCount"],
+    "additionalProperties": false
+  },
+  "fields": {"total": "number", "itemCount": "number"}
+}
