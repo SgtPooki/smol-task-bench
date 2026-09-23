@@ -1,7 +1,7 @@
 {
   "name": "support_ticket",
   "description": "Short customer-support messages (hand-written). Classify category and urgency.",
-  "instructions": "You route customer support messages. category is one of: billing (charges, invoices, plans, discounts), bug (the product is broken or behaves wrongly), feature-request (asking for new functionality), account-access (login, passwords, 2FA, admins, account changes or security), shipping (physical orders and deliveries). urgent is true only if the customer faces serious harm, data loss, a security compromise, or a hard deadline within about a day; otherwise false.",
+  "instructions": "You route customer support messages. category is one of: billing (charges, invoices, plans, discounts), bug (the product is broken or behaves wrongly), feature-request (asking for new functionality), account-access (login, passwords, 2FA, admins, account changes or security), shipping (physical orders and deliveries). urgent is true only if the customer faces serious harm, data loss, a security compromise, a hard deadline within about a day, or many users blocked from core functionality; otherwise false.",
   "prompt": "Message:\n{text}",
   "schema": {
     "type": "object",

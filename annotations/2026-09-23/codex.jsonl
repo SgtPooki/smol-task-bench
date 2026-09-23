@@ -1,0 +1,90 @@
+{"id":"log-01","service":"sshd","severity":"info","ambiguous":false,"note":""}
+{"id":"log-02","service":"systemd","severity":"info","ambiguous":false,"note":""}
+{"id":"log-03","service":"CRON","severity":"info","ambiguous":false,"note":""}
+{"id":"log-04","service":"dhcpd","severity":"info","ambiguous":false,"note":""}
+{"id":"log-05","service":"nginx","severity":"info","ambiguous":false,"note":""}
+{"id":"log-06","service":"postgres","severity":"info","ambiguous":false,"note":""}
+{"id":"log-07","service":"dockerd","severity":"info","ambiguous":false,"note":""}
+{"id":"log-08","service":"smartd","severity":"info","ambiguous":false,"note":""}
+{"id":"log-09","service":"smartd","severity":"critical","ambiguous":true,"note":"Severity could be warn if pending sectors are treated as degradation rather than established data-loss risk."}
+{"id":"log-10","service":"kernel","severity":"warn","ambiguous":false,"note":""}
+{"id":"log-11","service":"postgres","severity":"warn","ambiguous":false,"note":""}
+{"id":"log-12","service":"nginx","severity":"warn","ambiguous":false,"note":""}
+{"id":"log-13","service":"dockerd","severity":"warn","ambiguous":true,"note":"Severity could be error because a health-check operation failed, though service failure is not established."}
+{"id":"log-14","service":"netdata","severity":"warn","ambiguous":false,"note":""}
+{"id":"log-15","service":"certbot","severity":"warn","ambiguous":true,"note":"Severity could be info because renewal is scheduled and no renewal failure is stated."}
+{"id":"log-16","service":"nginx","severity":"error","ambiguous":false,"note":""}
+{"id":"log-17","service":"CRON","severity":"error","ambiguous":false,"note":""}
+{"id":"log-18","service":"postgres","severity":"error","ambiguous":false,"note":""}
+{"id":"log-19","service":"systemd","severity":"error","ambiguous":true,"note":"Severity could be critical if the exited service is treated as a service being down rather than a failed backup job."}
+{"id":"log-20","service":"dockerd","severity":"error","ambiguous":false,"note":""}
+{"id":"log-21","service":"sshd","severity":"error","ambiguous":false,"note":""}
+{"id":"log-22","service":"rsync","severity":"error","ambiguous":false,"note":""}
+{"id":"log-23","service":"kernel","severity":"critical","ambiguous":true,"note":"Severity could be error if the I/O failure is considered transient rather than evidence of hardware failure or data-loss risk."}
+{"id":"log-24","service":"zed","severity":"critical","ambiguous":false,"note":""}
+{"id":"log-25","service":"kernel","severity":"critical","ambiguous":true,"note":"Severity could be error because the line establishes one killed process but not whether the whole database service is down."}
+{"id":"log-26","service":"postgres","severity":"critical","ambiguous":false,"note":""}
+{"id":"log-27","service":"systemd","severity":"critical","ambiguous":false,"note":""}
+{"id":"log-28","service":"apcupsd","severity":"critical","ambiguous":true,"note":"Severity could be warn if UPS operation and controlled shutdown are treated as protective degraded operation."}
+{"id":"log-29","service":"kernel","severity":"critical","ambiguous":false,"note":""}
+{"id":"log-30","service":"smartd","severity":"critical","ambiguous":false,"note":""}
+{"id":"ticket-01","category":"billing","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-02","category":"billing","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-03","category":"billing","urgent":true,"ambiguous":false,"note":""}
+{"id":"ticket-04","category":"billing","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-05","category":"billing","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-06","category":"billing","urgent":true,"ambiguous":false,"note":""}
+{"id":"ticket-07","category":"bug","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-08","category":"bug","urgent":false,"ambiguous":true,"note":"Urgent could be true if the team-wide inability to save is considered serious harm or impending data loss."}
+{"id":"ticket-09","category":"bug","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-10","category":"bug","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-11","category":"bug","urgent":true,"ambiguous":false,"note":""}
+{"id":"ticket-12","category":"bug","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-13","category":"feature-request","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-14","category":"feature-request","urgent":false,"ambiguous":true,"note":"Category could be account-access because SSO concerns login, though the message asks for new functionality."}
+{"id":"ticket-15","category":"feature-request","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-16","category":"feature-request","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-17","category":"feature-request","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-18","category":"feature-request","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-19","category":"account-access","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-20","category":"account-access","urgent":true,"ambiguous":false,"note":""}
+{"id":"ticket-21","category":"account-access","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-22","category":"account-access","urgent":true,"ambiguous":false,"note":""}
+{"id":"ticket-23","category":"account-access","urgent":false,"ambiguous":true,"note":"Category could be bug because the customer reports email delivery behavior and requests a settings fix."}
+{"id":"ticket-24","category":"account-access","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-25","category":"shipping","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-26","category":"shipping","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-27","category":"shipping","urgent":true,"ambiguous":false,"note":""}
+{"id":"ticket-28","category":"shipping","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-29","category":"shipping","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-30","category":"shipping","urgent":true,"ambiguous":false,"note":""}
+{"id":"event-01","date":"2026-10-06","startTime":"14:30","durationMinutes":null,"ambiguous":false,"note":""}
+{"id":"event-02","date":"2026-09-24","startTime":"12:00","durationMinutes":null,"ambiguous":false,"note":""}
+{"id":"event-03","date":"2026-09-25","startTime":"09:00","durationMinutes":120,"ambiguous":false,"note":""}
+{"id":"event-04","date":"2026-09-29","startTime":"15:00","durationMinutes":30,"ambiguous":false,"note":""}
+{"id":"event-05","date":"2026-11-02","startTime":"07:15","durationMinutes":null,"ambiguous":false,"note":""}
+{"id":"event-06","date":"2026-09-27","startTime":"16:00","durationMinutes":120,"ambiguous":true,"note":"StartTime could be 04:00 because AM/PM is unstated; durationMinutes could be null if the usual length is not a duration for this meeting."}
+{"id":"event-07","date":"2026-09-28","startTime":"08:00","durationMinutes":null,"ambiguous":true,"note":"StartTime is only an arrival-window boundary; durationMinutes could be 120 if the window is treated as the event interval."}
+{"id":"event-08","date":"2026-10-15","startTime":"09:30","durationMinutes":420,"ambiguous":false,"note":""}
+{"id":"event-09","date":"2026-09-23","startTime":"17:45","durationMinutes":null,"ambiguous":false,"note":""}
+{"id":"event-10","date":"2026-10-01","startTime":"18:00","durationMinutes":90,"ambiguous":false,"note":""}
+{"id":"event-11","date":"2026-09-24","startTime":"10:15","durationMinutes":45,"ambiguous":true,"note":"StartTime could be 22:15 without AM/PM; durationMinutes could be null if a maximum is not treated as the event length."}
+{"id":"event-12","date":"2026-10-08","startTime":"18:30","durationMinutes":15,"ambiguous":true,"note":"Date could be 2026-08-10 if 10/08 uses day/month order."}
+{"id":"event-13","date":"2026-09-25","startTime":"11:00","durationMinutes":20,"ambiguous":true,"note":"StartTime could be 23:00 because AM/PM is unstated."}
+{"id":"event-14","date":"2026-09-26","startTime":"08:00","durationMinutes":null,"ambiguous":false,"note":""}
+{"id":"event-15","date":"2026-10-13","startTime":"09:40","durationMinutes":null,"ambiguous":false,"note":""}
+{"id":"event-16","date":"2026-09-28","startTime":"09:05","durationMinutes":null,"ambiguous":true,"note":"StartTime could be 21:05 because AM/PM is unstated."}
+{"id":"event-17","date":"2026-12-12","startTime":"20:00","durationMinutes":null,"ambiguous":true,"note":"StartTime could be 19:00 if doors opening is treated as the event start."}
+{"id":"event-18","date":"2026-09-25","startTime":"19:30","durationMinutes":180,"ambiguous":false,"note":""}
+{"id":"event-19","date":"2026-10-20","startTime":"13:00","durationMinutes":60,"ambiguous":false,"note":""}
+{"id":"event-20","date":"2026-09-24","startTime":"06:00","durationMinutes":null,"ambiguous":false,"note":""}
+{"id":"event-21","date":"2026-09-23","startTime":"20:15","durationMinutes":45,"ambiguous":false,"note":""}
+{"id":"event-22","date":"2026-09-30","startTime":"16:20","durationMinutes":null,"ambiguous":false,"note":""}
+{"id":"event-23","date":"2026-09-28","startTime":"14:00","durationMinutes":90,"ambiguous":false,"note":""}
+{"id":"event-24","date":"2026-09-30","startTime":"10:30","durationMinutes":null,"ambiguous":false,"note":""}
+{"id":"event-25","date":"2026-10-02","startTime":"13:00","durationMinutes":60,"ambiguous":true,"note":"StartTime could be 01:00 because AM/PM is unstated."}
+{"id":"event-26","date":"2026-10-09","startTime":"18:00","durationMinutes":1440,"ambiguous":false,"note":""}
+{"id":"event-27","date":"2026-11-30","startTime":"17:00","durationMinutes":null,"ambiguous":true,"note":"StartTime is a deadline rather than a stated event start; the payment itself has no specified start time."}
+{"id":"event-28","date":"2026-10-07","startTime":"08:45","durationMinutes":null,"ambiguous":false,"note":""}
+{"id":"event-29","date":"2026-11-03","startTime":"07:00","durationMinutes":null,"ambiguous":false,"note":""}
+{"id":"event-30","date":"2026-09-26","startTime":"18:30","durationMinutes":null,"ambiguous":false,"note":""}
