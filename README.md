@@ -28,13 +28,17 @@ The runner is one Python file with no dependencies beyond the standard library (
    python3 bench.py run --label gemma3-4b --base-url http://localhost:11434/v1 --model gemma3:4b
    ```
 
-   Runs are resumable: the runner skips items already in `results/<label>/<task>.jsonl`. Text-only models fail on image tasks, so pass `--tasks` to pick a subset. `--limit N` runs the first N items of each task.
+   Runs are resumable: the runner skips items already in `results/<label>/<task>.jsonl`. Each label also gets a `manifest.json` recording the request settings, a hash of every task's data, the scorer version, the host (macOS build, chip, memory), and the server (ollama version, model digest, quantization). A run refuses to resume into a label whose manifest doesn't match; pass `--overwrite` or pick a new label. `--retry-errors` re-runs items that failed with a transport error or a guardrail refusal.
 
-3. Print the comparison table:
+   Text-only models fail on image tasks, so pass `--tasks` to pick a subset. `--limit N` runs the first N items of each task.
+
+3. Print the comparison table, optionally with paired comparisons against one model:
 
    ```sh
-   python3 bench.py report
+   python3 bench.py report --vs apple-fm
    ```
+
+   The report re-scores saved raw outputs with the current scorer, so scorer fixes don't require new runs. It marks a label `(stale)` when the task data changed after the run and `(incomplete)` when items are missing.
 
 [`scripts/run-all.sh`](scripts/run-all.sh) holds the exact commands behind the reference results.
 
@@ -51,7 +55,17 @@ Pass extra request fields with `--extra`. For example, `--extra '{"reasoning_eff
 | `event-extraction` | A message mentioning one event | 30 | `date`, `startTime`, `durationMinutes` | Hand-written |
 | `receipts` | A receipt photo | 40 | `total`, `itemCount` | [CORD-v2](https://huggingface.co/datasets/naver-clova-ix/cord-v2) test split |
 
-Each request sends the task's instructions as the system message and asks for JSON through `response_format: json_schema`. An item counts as correct only when every scored field matches. The report also shows per-field accuracy, the share of invalid (unparseable) outputs, the median seconds per item, and a 95% Wilson confidence interval on the all-fields-correct rate.
+Each request sends the task's instructions as the system message and asks for JSON through `response_format: json_schema`. Every result falls into exactly one outcome:
+
+- `correct`: valid JSON, valid against the task schema, and every scored field matches
+- `wrong`: valid against the schema, but at least one field doesn't match
+- `schema fail`: valid JSON that violates the schema (missing, extra, or mistyped property)
+- `invalid JSON`: the response isn't a JSON object
+- `refused`: the server returned a guardrail error
+- `overflow`: generation ran past the model's context window without finishing, which `fm serve` reports as an error
+- `errors`: any other transport failure, such as a timeout
+
+The report shows the all-fields-correct rate with a 95% Wilson confidence interval, per-field accuracy over parsed responses, the count of each outcome, and the median seconds per successful request. `--vs LABEL` adds an exact McNemar test per task, which compares two models on the same items and is more sensitive than comparing their separate intervals.
 
 With 30 to 40 items per task, a confidence interval can span up to ±18 points (the width at a 50% score with 30 items). Use the results to separate models that differ by a wide margin, not to rank near-ties.
 
@@ -79,15 +93,16 @@ A task is a directory under `tasks/` with two files.
 
 Field scorers:
 
-- `exact`: case-insensitive, whitespace-trimmed equality. Booleans compare as booleans.
-- `number`: within 0.5% of the expected value.
+- `exact`: equality with matching types; strings compare case-insensitively after trimming whitespace, and `1` never equals `true`.
+- `number`: a numeric value within 0.5% of the expected value.
+- `time`: `HH:MM` and `HH:MM:SS` compare as the same minute.
 - `set`: order-insensitive list equality.
 
-An `expected` value of `null` matches an omitted or null output.
+Bump `SCORER_VERSION` in `bench.py` when scorer semantics change.
 
-Keep schemas within what every target model accepts. Apple's Foundation Model rejects union types such as `["integer", "null"]`, so express optional values by leaving the field out of `required`.
+List every property in `required`. Apple's Foundation Model rejects union types such as `["integer", "null"]` and omitted an optional property in every pilot answer, and OpenAI-style strict mode requires every property to be required, so use a documented sentinel value such as `0` when a field has no value.
 
-Run `python3 test_bench.py` after editing. It checks the scorers and verifies that every item's `expected` keys match its task's `fields`.
+Run `python3 test_bench.py` after editing. It checks the scorers, schema validation, and resume handling, and verifies that every task lists all properties as required and that every item's `expected` values satisfy the task schema.
 
 ## Apple Foundation Model notes
 
@@ -95,6 +110,8 @@ Run `python3 test_bench.py` after editing. It checks the scorers and verifies th
 - The only model name `fm serve` accepts is `system`.
 - The context window holds about 4,096 tokens, including instructions and output. Every task item fits well within it.
 - Image input works through the standard `image_url` content part with a base64 data URL.
+- `fm serve` doesn't enforce `max_tokens`. With a required integer field and an unrelated number in the input (for example "arrive 10 minutes early"), generation can run until it fills the context window, about 85 seconds on an M1 Max, and then fail. The report counts these as `overflow`.
+- `fm serve` processes one request at a time and keeps generating after a client times out, so a short `--timeout` delays every later request. Keep the default of 300 seconds.
 
 ## Data and license
 
