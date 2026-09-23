@@ -25,7 +25,7 @@
   },
   "fields": {
     "date": "exact",
-    "startTime": "exact",
+    "startTime": "time",
     "durationMinutes": "number"
   }
 }

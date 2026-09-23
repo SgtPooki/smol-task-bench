@@ -1,6 +1,6 @@
 #!/bin/sh
 # Reference run: Apple FM via `fm serve --port 1976`, everything else via ollama. Resumable.
-set -x
+set -eux
 TEXT=event-extraction,log-triage,support-tickets
 O=http://localhost:11434/v1
 python3 bench.py run --label apple-fm --base-url http://localhost:1976/v1 --model system

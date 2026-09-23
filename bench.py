@@ -3,14 +3,16 @@
 
   python3 bench.py run --label apple-fm --base-url http://localhost:1976/v1 --model system
   python3 bench.py run --label qwen3-4b --base-url http://localhost:11434/v1 --model qwen3:4b --tasks log-triage
-  python3 bench.py report
+  python3 bench.py report [--vs apple-fm]
 """
-import argparse, base64, json, mimetypes, statistics, sys, time, urllib.error, urllib.request
-from math import sqrt
+import argparse, base64, hashlib, json, math, mimetypes, platform, re, shutil, statistics, subprocess, sys, time
+import urllib.error, urllib.request
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).parent
 TASKS, RESULTS = ROOT / "tasks", ROOT / "results"
+SCORER_VERSION = 2  # bump when field_ok/score semantics change
 
 
 def load_task(name):
@@ -19,6 +21,18 @@ def load_task(name):
     items = [json.loads(l) for l in (d / "items.jsonl").read_text().splitlines() if l.strip()]
     return d, task, items
 
+
+def task_hash(name):
+    """sha256 over task.json, items.jsonl, and every referenced image."""
+    d, _, items = load_task(name)
+    h = hashlib.sha256((d / "task.json").read_bytes() + (d / "items.jsonl").read_bytes())
+    for it in items:
+        if "image" in it:
+            h.update((d / it["image"]).read_bytes())
+    return h.hexdigest()
+
+
+# ---------- request ----------
 
 def user_content(task_dir, task, item):
     text = task.get("prompt", "{text}").replace("{text}", item.get("text", ""))
@@ -30,17 +44,20 @@ def user_content(task_dir, task, item):
     return [{"type": "text", "text": text}, {"type": "image_url", "image_url": {"url": url}}]
 
 
-def call(base_url, model, task_dir, task, item, extra, timeout):
-    body = {
+def request_body(model, task, content, extra):
+    return {
         "model": model,
         "stream": False,  # fm serve streams unless told otherwise
         "temperature": 0,
-        "messages": [{"role": "system", "content": task["instructions"]},
-                     {"role": "user", "content": user_content(task_dir, task, item)}],
+        "messages": [{"role": "system", "content": task["instructions"]}, {"role": "user", "content": content}],
         "response_format": {"type": "json_schema",
                             "json_schema": {"name": task["name"], "schema": task["schema"], "strict": True}},
         **extra,
     }
+
+
+def call(base_url, body, timeout):
+    """-> (content | None, error | None, seconds)"""
     req = urllib.request.Request(f"{base_url.rstrip('/')}/chat/completions", json.dumps(body).encode(),
                                  {"content-type": "application/json"})
     t = time.monotonic()
@@ -49,86 +66,282 @@ def call(base_url, model, task_dir, task, item, extra, timeout):
             resp = json.load(r)
         return resp["choices"][0]["message"].get("content") or "", None, time.monotonic() - t
     except urllib.error.HTTPError as e:
-        return None, f"HTTP {e.code}: {e.read()[:300].decode(errors='replace')}", time.monotonic() - t
+        return None, f"HTTP {e.code}: {e.read()[:2000].decode(errors='replace')}", time.monotonic() - t
     except Exception as e:
-        return None, repr(e)[:300], time.monotonic() - t
+        return None, repr(e)[:2000], time.monotonic() - t
+
+
+# ---------- scoring ----------
+
+def is_num(v):
+    return isinstance(v, (int, float)) and not isinstance(v, bool)
 
 
 def norm(v):
     return v.strip().lower() if isinstance(v, str) else v
 
 
+def norm_time(v):
+    m = re.fullmatch(r"\s*(\d{1,2}):(\d{2})(?::\d{2})?\s*", v) if isinstance(v, str) else None
+    return f"{int(m[1]):02d}:{m[2]}" if m else None
+
+
 def field_ok(kind, got, want):
     if want is None:
         return got is None
+    if kind == "time":
+        return norm_time(got) is not None and norm_time(got) == norm_time(want)
     if kind == "number":
-        try:
-            return abs(float(got) - float(want)) <= 0.005 * max(1.0, abs(float(want)))
-        except (TypeError, ValueError):
-            return False
+        return is_num(got) and abs(got - want) <= 0.005 * max(1.0, abs(want))
     if kind == "set":  # order-insensitive list of strings
         return isinstance(got, list) and {norm(x) for x in got} == {norm(x) for x in want}
-    return norm(got) == norm(want)
+    # exact: types must agree (1 is not True, "5" is not 5)
+    if isinstance(want, bool) or isinstance(got, bool):
+        return type(got) is type(want) and got == want
+    if is_num(want):
+        return is_num(got) and got == want
+    return isinstance(got, str) and norm(got) == norm(want)
+
+
+TYPES = {"string": str, "integer": int, "number": (int, float), "boolean": bool, "object": dict, "array": list}
+
+
+def schema_errors(schema, v, path="$"):
+    """Validate the JSON Schema subset tasks use: type, enum, properties, required, additionalProperties, items."""
+    t = schema.get("type")
+    if t:
+        ok = isinstance(v, TYPES[t]) and not (t in ("integer", "number") and isinstance(v, bool))
+        if not ok:
+            return [f"{path}: expected {t}"]
+    if "enum" in schema and v not in schema["enum"]:
+        return [f"{path}: {v!r} not in enum"]
+    errs = []
+    if t == "object":
+        props = schema.get("properties", {})
+        errs += [f"{path}.{k}: missing" for k in schema.get("required", []) if k not in v]
+        if schema.get("additionalProperties") is False:
+            errs += [f"{path}.{k}: not allowed" for k in v if k not in props]
+        for k, sub in props.items():
+            if k in v:
+                errs += schema_errors(sub, v[k], f"{path}.{k}")
+    if t == "array" and "items" in schema:
+        for i, x in enumerate(v):
+            errs += schema_errors(schema["items"], x, f"{path}[{i}]")
+    return errs
+
+
+def outcome(rec):
+    """Classify one result: transport | refusal | overflow | invalid_json | schema | wrong | correct."""
+    if rec["raw"] is None:
+        err = (rec["error"] or "").lower()
+        if "guardrail" in err:
+            return "refusal"
+        if "exceeded the model's context size" in err:  # fm serve: output ran past the context window
+            return "overflow"
+        return "transport"
+    if not rec["json_ok"]:
+        return "invalid_json"
+    if not rec["schema_ok"]:
+        return "schema"
+    return "correct" if all(rec["fields"].values()) else "wrong"
 
 
 def score(task, raw, expected):
-    """-> (parsed_ok, {field: bool})"""
+    """-> dict(json_ok, schema_ok, schema_errors, fields)"""
     try:
-        out = json.loads(raw)
-        assert isinstance(out, dict)
+        out = json.loads(raw) if raw is not None else None
+    except (json.JSONDecodeError, TypeError):
+        out = None
+    if not isinstance(out, dict):
+        return {"json_ok": False, "schema_ok": False, "schema_errors": [], "fields": {f: False for f in task["fields"]}}
+    errs = schema_errors(task["schema"], out)
+    return {"json_ok": True, "schema_ok": not errs, "schema_errors": errs,
+            "fields": {f: field_ok(kind, out.get(f), expected[f]) for f, kind in task["fields"].items()}}
+
+
+# ---------- provenance ----------
+
+def sh(*cmd):
+    try:
+        return subprocess.run(cmd, capture_output=True, text=True, timeout=10).stdout.strip() or None
     except Exception:
-        return False, {f: False for f in task["fields"]}
-    return True, {f: field_ok(kind, out.get(f), expected[f]) for f, kind in task["fields"].items()}
+        return None
+
+
+def get_json(url, data=None):
+    try:
+        req = urllib.request.Request(url, json.dumps(data).encode() if data else None,
+                                     {"content-type": "application/json"})
+        with urllib.request.urlopen(req, timeout=10) as r:
+            return json.load(r)
+    except Exception:
+        return None
+
+
+def server_info(base_url, model):
+    """Best-effort server/model identity: ollama version, digest, quantization; /v1/models for anything else."""
+    host = re.sub(r"/v1/?$", "", base_url.rstrip("/"))
+    info = {"models": get_json(f"{base_url.rstrip('/')}/models")}
+    ver = get_json(f"{host}/api/version")
+    if ver:
+        info["ollama_version"] = ver.get("version")
+        tags = get_json(f"{host}/api/tags") or {}
+        info["digest"] = next((m["digest"] for m in tags.get("models", []) if m["name"] == model), None)
+        info["details"] = (get_json(f"{host}/api/show", {"model": model}) or {}).get("details")
+    return info
+
+
+def run_config(a, names, extra):
+    # only settings that change what a result means; --limit and --timeout may differ between resumes
+    return {"model": a.model, "base_url": a.base_url, "extra": extra, "scorer_version": SCORER_VERSION,
+            "task_hashes": {n: task_hash(n) for n in names}}
+
+
+def write_manifest(label_dir, config):
+    manifest = {
+        "config": config,
+        "created": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "host": {"platform": platform.platform(), "macos": platform.mac_ver()[0] or None,
+                 "macos_build": sh("sw_vers", "-buildVersion"), "machine": platform.machine(),
+                 "hw_model": sh("sysctl", "-n", "hw.model"), "cpu": sh("sysctl", "-n", "machdep.cpu.brand_string"),
+                 "memory_bytes": sh("sysctl", "-n", "hw.memsize"), "python": platform.python_version()},
+        "server": server_info(config["base_url"], config["model"]),
+    }
+    (label_dir / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+
+
+# ---------- run ----------
+
+def read_records(path):
+    """Parse a results file, dropping blank and truncated lines left by an interrupted write."""
+    if not path.exists():
+        return []
+    recs = []
+    for line in path.read_text().splitlines():
+        try:
+            recs.append(json.loads(line))
+        except json.JSONDecodeError:
+            continue
+    return recs
+
+
+def check_resumable(old, new):
+    """A resumed run may add tasks, but every setting and every shared task hash must match."""
+    strip = lambda c: {k: v for k, v in c.items() if k != "task_hashes"}
+    return strip(old) == strip(new) and all(old["task_hashes"].get(n, h) == h for n, h in new["task_hashes"].items())
 
 
 def cmd_run(a):
     extra = json.loads(a.extra) if a.extra else {}
     names = a.tasks.split(",") if a.tasks else sorted(p.name for p in TASKS.iterdir() if (p / "task.json").exists())
+    label_dir = RESULTS / a.label
+    if a.overwrite and label_dir.exists():
+        shutil.rmtree(label_dir)
+    label_dir.mkdir(parents=True, exist_ok=True)
+    config = run_config(a, names, extra)
+    mpath = label_dir / "manifest.json"
+    if mpath.exists():
+        old = json.loads(mpath.read_text())["config"]
+        if not check_resumable(old, config):
+            sys.exit(f"results/{a.label} was produced with a different config or task data; "
+                     f"use a new --label or pass --overwrite")
+        config["task_hashes"] = {**old["task_hashes"], **config["task_hashes"]}
+    elif any(label_dir.glob("*.jsonl")):
+        sys.exit(f"results/{a.label} has results but no manifest; use a new --label or pass --overwrite")
+    write_manifest(label_dir, config)
+
     for name in names:
         task_dir, task, items = load_task(name)
         if a.limit:
             items = items[: a.limit]
-        out = RESULTS / a.label / f"{name}.jsonl"
-        out.parent.mkdir(parents=True, exist_ok=True)
-        done = {json.loads(l)["id"] for l in out.read_text().splitlines()} if out.exists() else set()
+        out = label_dir / f"{name}.jsonl"
+        recs = read_records(out)
+        if a.retry_errors:
+            recs = [r for r in recs if r["raw"] is not None]
+        out.write_text("".join(json.dumps(r) + "\n" for r in recs))  # rewrite clean (drops partial lines)
+        done = {r["id"] for r in recs}
         todo = [i for i in items if i["id"] not in done]
         print(f"[{a.label}] {name}: {len(todo)} to run ({len(done)} cached)", file=sys.stderr)
         with out.open("a") as f:
             for n, item in enumerate(todo, 1):
-                raw, err, secs = call(a.base_url, a.model, task_dir, task, item, extra, a.timeout)
-                parsed, fields = score(task, raw, item["expected"]) if raw is not None else (False, {k: False for k in task["fields"]})
-                rec = {"id": item["id"], "parsed": parsed, "fields": fields, "seconds": round(secs, 3),
-                       "error": err, "raw": raw, "expected": item["expected"]}
+                body = request_body(a.model, task, user_content(task_dir, task, item), extra)
+                raw, err, secs = call(a.base_url, body, a.timeout)
+                rec = {"id": item["id"], "raw": raw, "error": err, "seconds": round(secs, 3),
+                       "expected": item["expected"], **score(task, raw, item["expected"])}
                 f.write(json.dumps(rec) + "\n")
                 f.flush()
-                print(f"  {n}/{len(todo)} {item['id']} {'ok' if all(fields.values()) else 'miss' if parsed else 'ERR'} {secs:.1f}s",
-                      file=sys.stderr)
+                print(f"  {n}/{len(todo)} {item['id']} {outcome(rec)} {secs:.1f}s", file=sys.stderr)
 
+
+# ---------- report ----------
 
 def wilson(k, n, z=1.96):
     if not n:
         return 0.0, 0.0
     p, d = k / n, 1 + z * z / n
-    m, h = (p + z * z / (2 * n)) / d, z * sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / d
-    return m - h, m + h
+    m, h = (p + z * z / (2 * n)) / d, z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / d
+    return max(0.0, m - h), min(1.0, m + h)
+
+
+def mcnemar_p(b, c):
+    """Exact two-sided McNemar p-value from discordant counts b and c."""
+    n = b + c
+    if not n:
+        return 1.0
+    return min(1.0, 2 * sum(math.comb(n, i) for i in range(min(b, c) + 1)) / 2 ** n)
+
+
+def rescored(label_dir, name):
+    """Re-score saved raw outputs against current task data. -> (records by id, stale)"""
+    if not (TASKS / name / "task.json").exists():
+        return {}, True
+    _, task, items = load_task(name)
+    exp = {i["id"]: i["expected"] for i in items}
+    recs = {r["id"]: {**r, **score(task, r["raw"], exp[r["id"]])}
+            for r in read_records(label_dir / f"{name}.jsonl") if r["id"] in exp}
+    manifest = label_dir / "manifest.json"
+    stale = not manifest.exists() or json.loads(manifest.read_text())["config"]["task_hashes"].get(name) != task_hash(name)
+    return recs, stale
 
 
 def cmd_report(a):
-    rows = []
-    for f in sorted(RESULTS.glob("*/*.jsonl")):
-        recs = [json.loads(l) for l in f.read_text().splitlines() if l.strip()]
-        if not recs:
-            continue
-        n = len(recs)
-        exact = sum(all(r["fields"].values()) for r in recs)
-        field_acc = statistics.mean(statistics.mean(r["fields"].values()) for r in recs)
-        lo, hi = wilson(exact, n)
-        rows.append((f.stem, f.parent.name, n, exact / n, lo, hi, field_acc,
-                     1 - sum(r["parsed"] for r in recs) / n, statistics.median(r["seconds"] for r in recs)))
-    print("| task | model | n | all fields correct | 95% CI | field accuracy | invalid output | median s |")
-    print("|---|---|---|---|---|---|---|---|")
-    for t, m, n, ex, lo, hi, fa, bad, sec in sorted(rows):
-        print(f"| {t} | {m} | {n} | {ex:.1%} | {lo:.0%}-{hi:.0%} | {fa:.1%} | {bad:.0%} | {sec:.2f} |")
+    rows, by = [], {}
+    for label_dir in sorted(p for p in RESULTS.glob("*") if p.is_dir()):
+        for f in sorted(label_dir.glob("*.jsonl")):
+            recs, stale = rescored(label_dir, f.stem)
+            if not recs:
+                continue
+            by[(f.stem, label_dir.name)] = recs
+            vals = list(recs.values())
+            n, total = len(vals), len(load_task(f.stem)[2])
+            oc = [outcome(r) for r in vals]
+            k = oc.count("correct")
+            lo, hi = wilson(k, n)
+            answered = [r for r in vals if r["json_ok"]]
+            fa = statistics.mean(statistics.mean(r["fields"].values()) for r in answered) if answered else 0.0
+            ok_secs = [r["seconds"] for r in vals if r["raw"] is not None]
+            flags = ("" if n == total else f" (incomplete {n}/{total})") + (" (stale)" if stale else "")
+            rows.append((f.stem, label_dir.name + flags, n, k / n, lo, hi, fa, oc.count("wrong"), oc.count("schema"),
+                         oc.count("invalid_json"), oc.count("refusal"), oc.count("overflow"), oc.count("transport"),
+                         statistics.median(ok_secs) if ok_secs else float("nan")))
+    print("| task | model | n | all fields correct | 95% CI | field accuracy | wrong | schema fail | invalid JSON | refused | overflow | errors | median s |")
+    print("|---|---|---|---|---|---|---|---|---|---|---|---|---|")
+    for t, m, n, ex, lo, hi, fa, w, s, j, rf, ov, e, sec in sorted(rows):
+        print(f"| {t} | {m} | {n} | {ex:.1%} | {lo:.0%}-{hi:.0%} | {fa:.1%} | {w} | {s} | {j} | {rf} | {ov} | {e} | {sec:.2f} |")
+    if a.vs:
+        print(f"\nPaired comparison against {a.vs} on items both answered (exact McNemar test):\n")
+        print("| task | model | both correct | only model | only baseline | neither | p |")
+        print("|---|---|---|---|---|---|---|")
+        ok = lambda r: outcome(r) == "correct"
+        for (t, m), recs in sorted(by.items()):
+            base = by.get((t, a.vs))
+            if m == a.vs or not base:
+                continue
+            ids = recs.keys() & base.keys()
+            both = sum(ok(recs[i]) and ok(base[i]) for i in ids)
+            only_m = sum(ok(recs[i]) and not ok(base[i]) for i in ids)
+            only_b = sum(ok(base[i]) and not ok(recs[i]) for i in ids)
+            print(f"| {t} | {m} | {both} | {only_m} | {only_b} | {len(ids) - both - only_m - only_b} | {mcnemar_p(only_m, only_b):.3f} |")
 
 
 def main():
@@ -142,8 +355,12 @@ def main():
     r.add_argument("--limit", type=int, help="first N items per task")
     r.add_argument("--extra", help="JSON merged into the request body, e.g. '{\"reasoning_effort\":\"none\"}'")
     r.add_argument("--timeout", type=float, default=300)
+    r.add_argument("--retry-errors", action="store_true", help="re-run items that failed with a transport error or refusal")
+    r.add_argument("--overwrite", action="store_true", help="delete results/<label>/ before running")
     r.set_defaults(fn=cmd_run)
-    sub.add_parser("report", help="markdown table of all results").set_defaults(fn=cmd_report)
+    rp = sub.add_parser("report", help="markdown table of all results, re-scored with the current scorer")
+    rp.add_argument("--vs", metavar="LABEL", help="add a paired comparison of every model against LABEL")
+    rp.set_defaults(fn=cmd_report)
     a = p.parse_args()
     a.fn(a)
 
