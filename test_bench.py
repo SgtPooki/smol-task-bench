@@ -34,9 +34,16 @@ assert bench.outcome(rec('{"s": "a", "n": 1}')) == "correct"
 assert bench.outcome(rec('{"s": "b", "n": 1}')) == "wrong"
 assert bench.outcome(rec('{"s": "a", "n": "1"}')) == "schema"
 assert bench.outcome(rec("not json")) == "invalid_json"
+assert bench.outcome(rec('```json\n{"s": "a", "n": 1}\n```')) == "correct"
+assert bench.outcome(rec('Sure! {"s": "a", "n": 1}')) == "invalid_json"
 assert bench.outcome(rec(None, "HTTP 500: The model's safety guardrails were triggered.")) == "refusal"
 assert bench.outcome(rec(None, "TimeoutError()")) == "transport"
 assert bench.outcome(rec(None, "HTTP 500: The session's transcript exceeded the model's context size.")) == "overflow"
+
+b = bench.request_body("m", {"name": "n", "instructions": "I", "schema": schema}, "hi", {})
+assert b["response_format"]["json_schema"]["schema"] == schema and b["stream"] is False
+b = bench.request_body("m", {"name": "n", "instructions": "I", "schema": schema}, "hi", {}, constrained=False)
+assert "response_format" not in b and json.dumps(schema) in b["messages"][0]["content"]
 
 lo, hi = bench.wilson(80, 100)
 assert 0.71 < lo < 0.72 and 0.86 < hi < 0.87
