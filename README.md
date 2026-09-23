@@ -7,7 +7,29 @@ It targets Apple's on-device Foundation Model (`fm serve` on macOS 27) and compa
 ## Results
 
 <!-- results:start -->
-This benchmark is a pilot. Known scoring and labeling problems are tracked in the [P0 issues](https://github.com/SgtPooki/smol-task-bench/issues?q=is%3Aissue+label%3AP0), and reference results will be published after those land.
+Preliminary: the text tasks still need a human second annotator ([#4](https://github.com/SgtPooki/smol-task-bench/issues/4)) and the receipt task a contamination-free set ([#8](https://github.com/SgtPooki/smol-task-bench/issues/8)). Run on 2026-09-23 on a MacBook Pro (M1 Max, 64 GB), macOS 27.0 (26A428), ollama 0.34.3.
+
+Share of items with every field correct, constrained track (`response_format: json_schema`), with median seconds per item:
+
+| Model | log-triage | support-tickets | event-extraction | receipts |
+|---|---|---|---|---|
+| Apple FM (`fm serve`) | 70.0% (0.87 s) | 86.7% (0.72 s) | 33.3% (1.50 s) | 60.0% (2.31 s) |
+| gemma3:4b | 66.7% (0.53 s) | 93.3% (0.64 s) | 70.0% (0.84 s) | 20.0% (2.89 s) |
+| llama3.2:3b | 63.3% (0.36 s) | 86.7% (0.29 s) | 73.3% (0.49 s) | text only |
+| qwen2.5vl:3b | 63.3% (0.37 s) | 76.7% (0.29 s) | 56.7% (0.64 s) | 80.0% (5.33 s) |
+| qwen3:4b, thinking off | 90.0% (0.46 s) | 90.0% (0.41 s) | 40.0% (0.83 s) | text only |
+| qwen3:4b, thinking on | 93.3% (24.01 s) | 100.0% (11.27 s) | 100.0% (97.68 s) | text only |
+
+With 30 to 40 items per task, most differences under about 20 points are not significant. Paired McNemar tests against Apple FM (`python3 bench.py report --vs apple-fm`) find:
+
+- **log-triage and support-tickets:** no model without thinking differs significantly from Apple FM (p ≥ 0.109).
+- **event-extraction:** gemma3:4b, llama3.2:3b, and qwen2.5vl:3b beat Apple FM (p ≤ 0.016). 10 of Apple FM's 30 answers are `overflow`: guided generation loops until it fills the context window ([#21](https://github.com/SgtPooki/smol-task-bench/issues/21)). Its field accuracy on the items it did answer is 81.7%.
+- **receipts:** Apple FM beats gemma3:4b (p < 0.001), which reads 36 of 40 totals correctly but miscounts item lines on 32. Apple FM vs qwen2.5vl:3b is not significant (p = 0.077).
+- **Thinking:** qwen3:4b with thinking on is the most accurate model on every text task, at 11 to 98 seconds per item.
+
+The `--no-schema` track sends the JSON Schema in the system prompt instead. It removes Apple FM's overflows on event-extraction (46.7% correct, 0 overflows) but introduces schema failures elsewhere: Apple FM answers `"type"` instead of `"category"` on 27 of 30 support tickets (10.0% correct), and llama3.2:3b echoes the schema back on 24 of 30 event items. These failures depend on how the prompt presents the schema, so treat the no-schema track as a measure of what constrained decoding contributes, not of each model's ceiling. qwen3:4b has no no-schema results because ollama 0.34.3 only disables its thinking together with `response_format`.
+
+`python3 bench.py report` prints every column for both tracks, including each failure type.
 <!-- results:end -->
 
 ## Run it

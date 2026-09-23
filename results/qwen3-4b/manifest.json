@@ -1,0 +1,125 @@
+{
+  "config": {
+    "model": "qwen3:4b",
+    "base_url": "http://localhost:11434/v1",
+    "extra": {
+      "reasoning_effort": "none"
+    },
+    "constrained": true,
+    "scorer_version": 3,
+    "task_hashes": {
+      "event-extraction": "1a7c6adc8c075cdf3521724f32b71293cb7311b71ce7d1ac487b5f936ea6786a",
+      "log-triage": "49844eb71624b58a5d78f6b96a3088f9444ba8d60b1ff6fcdd514588ca2b4949",
+      "support-tickets": "27d7e0a7b44205a43fb6434cc18880776fef061137dc822cdaec7991453b9692"
+    }
+  },
+  "created": "2026-09-23T21:51:37+00:00",
+  "host": {
+    "platform": "macOS-27.0-arm64-arm-64bit-Mach-O",
+    "macos": "27.0",
+    "macos_build": "26A428",
+    "machine": "arm64",
+    "hw_model": "MacBookPro18,2",
+    "cpu": "Apple M1 Max",
+    "memory_bytes": "68719476736",
+    "python": "3.14.7"
+  },
+  "server": {
+    "models": {
+      "object": "list",
+      "data": [
+        {
+          "id": "qwen2.5vl:3b",
+          "object": "model",
+          "created": 1790190123,
+          "owned_by": "library"
+        },
+        {
+          "id": "gemma3:4b",
+          "object": "model",
+          "created": 1790190090,
+          "owned_by": "library"
+        },
+        {
+          "id": "llama3.2:3b",
+          "object": "model",
+          "created": 1790190056,
+          "owned_by": "library"
+        },
+        {
+          "id": "qwen3:4b",
+          "object": "model",
+          "created": 1790190031,
+          "owned_by": "library"
+        },
+        {
+          "id": "antares-1b-vloc:latest",
+          "object": "model",
+          "created": 1784819589,
+          "owned_by": "library"
+        },
+        {
+          "id": "hf.co/mitkox/antares-1b-Q8_0-GGUF:Q8_0",
+          "object": "model",
+          "created": 1784819588,
+          "owned_by": "mitkox"
+        },
+        {
+          "id": "hf.co/unsloth/gemma-4-26B-A4B-it-qat-GGUF:UD-Q4_K_XL",
+          "object": "model",
+          "created": 1784748082,
+          "owned_by": "unsloth"
+        },
+        {
+          "id": "nomic-embed-text:latest",
+          "object": "model",
+          "created": 1781218459,
+          "owned_by": "library"
+        },
+        {
+          "id": "bge-m3:latest",
+          "object": "model",
+          "created": 1779138427,
+          "owned_by": "library"
+        },
+        {
+          "id": "bge-large:latest",
+          "object": "model",
+          "created": 1779134415,
+          "owned_by": "library"
+        },
+        {
+          "id": "mxbai-embed-large:latest",
+          "object": "model",
+          "created": 1778532547,
+          "owned_by": "library"
+        },
+        {
+          "id": "gemma4:31b-q8",
+          "object": "model",
+          "created": 1776952567,
+          "owned_by": "library"
+        },
+        {
+          "id": "gpt-oss:20b",
+          "object": "model",
+          "created": 1776706959,
+          "owned_by": "library"
+        }
+      ]
+    },
+    "ollama_version": "0.34.3",
+    "digest": "359d7dd4bcdab3d86b87d73ac27966f4dbb9f5efdfcc75d34a8764a09474fae7",
+    "details": {
+      "parent_model": "",
+      "format": "gguf",
+      "family": "qwen3",
+      "families": [
+        "qwen3"
+      ],
+      "parameter_size": "4.0B",
+      "quantization_level": "Q4_K_M"
+    },
+    "context_length": 262144
+  }
+}

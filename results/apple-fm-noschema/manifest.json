@@ -1,0 +1,39 @@
+{
+  "config": {
+    "model": "system",
+    "base_url": "http://localhost:1976/v1",
+    "extra": {},
+    "constrained": false,
+    "scorer_version": 3,
+    "task_hashes": {
+      "event-extraction": "1a7c6adc8c075cdf3521724f32b71293cb7311b71ce7d1ac487b5f936ea6786a",
+      "log-triage": "49844eb71624b58a5d78f6b96a3088f9444ba8d60b1ff6fcdd514588ca2b4949",
+      "receipts": "a4d0bddb9c00e2074336a24fd70aef92a685f2b57af35aabe822aa63e789061f",
+      "support-tickets": "27d7e0a7b44205a43fb6434cc18880776fef061137dc822cdaec7991453b9692"
+    }
+  },
+  "created": "2026-09-23T21:51:36+00:00",
+  "host": {
+    "platform": "macOS-27.0-arm64-arm-64bit-Mach-O",
+    "macos": "27.0",
+    "macos_build": "26A428",
+    "machine": "arm64",
+    "hw_model": "MacBookPro18,2",
+    "cpu": "Apple M1 Max",
+    "memory_bytes": "68719476736",
+    "python": "3.14.7"
+  },
+  "server": {
+    "models": {
+      "data": [
+        {
+          "created": 1790200296,
+          "object": "model",
+          "id": "system",
+          "owned_by": "Apple"
+        }
+      ],
+      "object": "list"
+    }
+  }
+}
