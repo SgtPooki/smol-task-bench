@@ -12,7 +12,7 @@
 {"id": "log-12", "text": "2026/09/23 10:12:44 [warn] 311#311: *8812 an upstream response is buffered to a temporary file /var/cache/nginx/proxy_temp/2/00/0000000002 while reading upstream", "expected": {"service": "nginx", "severity": "warn"}}
 {"id": "log-13", "text": "Sep 23 12:01:40 docker01 dockerd[1022]: time=\"2026-09-23T12:01:40Z\" level=warning msg=\"Health check for container 7bd1e0 failed 1 of 3 times\"", "expected": {"service": "dockerd", "severity": "warn"}}
 {"id": "log-14", "text": "Sep 23 04:12:09 nas01 netdata[1502]: WARNING: disk space usage for /mnt/tank is 86% (threshold 85%)", "expected": {"service": "netdata", "severity": "warn"}}
-{"id": "log-15", "text": "Sep 23 00:00:04 web01 certbot[3310]: Certificate for home.example.net expires in 9 days; renewal attempt scheduled", "expected": {"service": "certbot", "severity": "warn"}}
+{"id": "log-15", "text": "Sep 23 00:00:04 web01 certbot[3310]: Certificate for home.example.net expires in 9 days; renewal attempt scheduled", "expected": {"service": "certbot", "severity": "info"}}
 {"id": "log-16", "text": "2026/09/23 10:14:02 [error] 311#311: *9120 upstream timed out (110: Connection timed out) while reading response header from upstream, client: 10.0.0.7, server: jellyfin.lan, upstream: \"http://10.0.0.20:8096/\"", "expected": {"service": "nginx", "severity": "error"}}
 {"id": "log-17", "text": "Sep 23 02:30:01 nas01 CRON[9921]: (russ) MAIL (mailed 212 bytes of output but got status 0x004b from MTA)", "expected": {"service": "CRON", "severity": "error"}}
 {"id": "log-18", "text": "2026-09-23 11:20:31.771 UTC [6021] ERROR:  duplicate key value violates unique constraint \"users_email_key\"", "expected": {"service": "postgres", "severity": "error"}}

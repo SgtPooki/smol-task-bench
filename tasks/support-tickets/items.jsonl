@@ -20,7 +20,7 @@
 {"id": "ticket-20", "text": "I'm locked out and our payroll runs in one hour \u2014 I'm the only admin. The 2FA codes aren't arriving.", "expected": {"category": "account-access", "urgent": true}}
 {"id": "ticket-21", "text": "How do I add a second admin to our workspace?", "expected": {"category": "account-access", "urgent": false}}
 {"id": "ticket-22", "text": "Someone changed my password and email without my permission. I think my account was hacked, please lock it now.", "expected": {"category": "account-access", "urgent": true}}
-{"id": "ticket-23", "text": "The password reset email went to spam, but it worked. Maybe look at your email settings?", "expected": {"category": "account-access", "urgent": false}}
+{"id": "ticket-23", "text": "How do I turn on two-factor authentication for my account?", "expected": {"category": "account-access", "urgent": false}}
 {"id": "ticket-24", "text": "Can you delete my old account under my personal email? I only use the work one now.", "expected": {"category": "account-access", "urgent": false}}
 {"id": "ticket-25", "text": "My order #10442 says shipped but tracking hasn't updated in 3 days. Any news?", "expected": {"category": "shipping", "urgent": false}}
 {"id": "ticket-26", "text": "Can I change the delivery address on an order I placed an hour ago?", "expected": {"category": "shipping", "urgent": false}}

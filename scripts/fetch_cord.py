@@ -21,6 +21,11 @@ def get(url, tries=4):
             time.sleep(2 ** i)
 
 
+def subs(m):
+    sub = m.get("sub") or []
+    return [sub] if isinstance(sub, dict) else sub
+
+
 def amount(s):
     s = re.sub(r"[.,]\d{2}$", "", (s or "").strip())  # '365000.00' -> cents; 3-digit groups are thousands
     digits = re.sub(r"[^\d]", "", s)
@@ -42,7 +47,8 @@ for offset in range(0, 100, 20):
         img = OUT / "images" / f"cord-test-{idx:03d}.jpg"
         img.write_bytes(get(r["image"]["src"]))
         items.append({"id": f"cord-test-{idx:03d}", "image": f"images/{img.name}",
-                      "expected": {"total": total, "itemCount": len(menu)}})
+                      # every printed item line, including add-on lines CORD nests under "sub"
+                      "expected": {"total": total, "itemCount": sum(1 + len(subs(m)) for m in menu)}})
         if len(items) == N:
             break
     if len(items) == N:

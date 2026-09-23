@@ -1,0 +1,90 @@
+{"id": "log-01", "text": "Sep 23 08:14:02 nas01 sshd[2211]: Accepted publickey for russ from 10.0.0.12 port 51234 ssh2: ED25519 SHA256:k3j...", "expected": {"service": "sshd", "severity": "info"}}
+{"id": "log-02", "text": "Sep 23 08:15:10 pve1 systemd[1]: Started Daily apt download activities.", "expected": {"service": "systemd", "severity": "info"}}
+{"id": "log-03", "text": "Sep 23 03:00:01 nas01 CRON[8812]: (root) CMD (/usr/local/bin/zfs-auto-snapshot --quiet --label=daily)", "expected": {"service": "CRON", "severity": "info"}}
+{"id": "log-04", "text": "Sep 23 09:02:44 router dhcpd[912]: DHCPACK on 10.0.0.57 to 3c:22:fb:11:08:9a (livingroom-tv) via br0", "expected": {"service": "dhcpd", "severity": "info"}}
+{"id": "log-05", "text": "10.0.0.12 - - [23/Sep/2026:09:12:01 +0000] \"GET /api/health HTTP/1.1\" 200 17 \"-\" \"Uptime-Kuma/1.23\"", "expected": {"service": "nginx", "severity": "info"}}
+{"id": "log-06", "text": "2026-09-23 02:00:03.120 UTC [4410] LOG:  checkpoint complete: wrote 1842 buffers (11.2%); 0 WAL file(s) added, 0 removed, 1 recycled", "expected": {"service": "postgres", "severity": "info"}}
+{"id": "log-07", "text": "Sep 23 07:30:12 docker01 dockerd[1022]: time=\"2026-09-23T07:30:12Z\" level=info msg=\"Container 4f2a1c started\" image=jellyfin/jellyfin:10.10", "expected": {"service": "dockerd", "severity": "info"}}
+{"id": "log-08", "text": "Sep 23 06:00:00 nas01 smartd[733]: Device: /dev/sda [SAT], SMART Usage Attribute: 194 Temperature_Celsius changed from 34 to 35", "expected": {"service": "smartd", "severity": "info"}}
+{"id": "log-09", "text": "Sep 23 06:30:00 nas01 smartd[733]: Device: /dev/sdb [SAT], 8 Currently unreadable (pending) sectors", "expected": {"service": "smartd", "severity": "warn"}}
+{"id": "log-10", "text": "Sep 23 11:02:17 pve1 kernel: [88412.221] CPU3: Core temperature above threshold, cpu clock throttled (total events = 41)", "expected": {"service": "kernel", "severity": "warn"}}
+{"id": "log-11", "text": "2026-09-23 10:41:55.002 UTC [5120] WARNING:  there is already a transaction in progress", "expected": {"service": "postgres", "severity": "warn"}}
+{"id": "log-12", "text": "2026/09/23 10:12:44 [warn] 311#311: *8812 an upstream response is buffered to a temporary file /var/cache/nginx/proxy_temp/2/00/0000000002 while reading upstream", "expected": {"service": "nginx", "severity": "warn"}}
+{"id": "log-13", "text": "Sep 23 12:01:40 docker01 dockerd[1022]: time=\"2026-09-23T12:01:40Z\" level=warning msg=\"Health check for container 7bd1e0 failed 1 of 3 times\"", "expected": {"service": "dockerd", "severity": "warn"}}
+{"id": "log-14", "text": "Sep 23 04:12:09 nas01 netdata[1502]: WARNING: disk space usage for /mnt/tank is 86% (threshold 85%)", "expected": {"service": "netdata", "severity": "warn"}}
+{"id": "log-15", "text": "Sep 23 00:00:04 web01 certbot[3310]: Certificate for home.example.net expires in 9 days; renewal attempt scheduled", "expected": {"service": "certbot", "severity": "warn"}}
+{"id": "log-16", "text": "2026/09/23 10:14:02 [error] 311#311: *9120 upstream timed out (110: Connection timed out) while reading response header from upstream, client: 10.0.0.7, server: jellyfin.lan, upstream: \"http://10.0.0.20:8096/\"", "expected": {"service": "nginx", "severity": "error"}}
+{"id": "log-17", "text": "Sep 23 02:30:01 nas01 CRON[9921]: (russ) MAIL (mailed 212 bytes of output but got status 0x004b from MTA)", "expected": {"service": "CRON", "severity": "error"}}
+{"id": "log-18", "text": "2026-09-23 11:20:31.771 UTC [6021] ERROR:  duplicate key value violates unique constraint \"users_email_key\"", "expected": {"service": "postgres", "severity": "error"}}
+{"id": "log-19", "text": "Sep 23 07:45:03 docker01 systemd[1]: restic-backup.service: Main process exited, code=exited, status=1/FAILURE", "expected": {"service": "systemd", "severity": "error"}}
+{"id": "log-20", "text": "Sep 23 13:10:02 docker01 dockerd[1022]: time=\"2026-09-23T13:10:02Z\" level=error msg=\"Handler for POST /v1.45/containers/create returned error: pull access denied for ghcr.io/acme/private-app\"", "expected": {"service": "dockerd", "severity": "error"}}
+{"id": "log-21", "text": "Sep 23 14:22:10 nas01 sshd[3312]: error: Could not load host key: /etc/ssh/ssh_host_ed25519_key", "expected": {"service": "sshd", "severity": "error"}}
+{"id": "log-22", "text": "Sep 23 01:05:44 nas01 rsync[7710]: rsync error: some files/attrs were not transferred (see previous errors) (code 23) at main.c(1338)", "expected": {"service": "rsync", "severity": "error"}}
+{"id": "log-23", "text": "Sep 23 10:41:02 nas01 kernel: ata3.00: failed command: READ FPDMA QUEUED; ata3: hard resetting link; blk_update_request: I/O error, dev sdc, sector 9812334", "expected": {"service": "kernel", "severity": "critical"}}
+{"id": "log-24", "text": "Sep 23 10:44:19 nas01 zed[1502]: eid=230 class=statechange pool='tank' vdev=sdc state=FAULTED; pool tank is DEGRADED", "expected": {"service": "zed", "severity": "critical"}}
+{"id": "log-25", "text": "Sep 23 15:01:55 docker01 kernel: Out of memory: Killed process 22114 (postgres) total-vm:8123344kB, anon-rss:6021220kB", "expected": {"service": "kernel", "severity": "critical"}}
+{"id": "log-26", "text": "2026-09-23 15:02:01.004 UTC [1] PANIC:  could not write to file \"pg_wal/xlogtemp.1\": No space left on device", "expected": {"service": "postgres", "severity": "critical"}}
+{"id": "log-27", "text": "Sep 23 15:03:12 pve1 systemd[1]: pve-cluster.service: Failed with result 'exit-code'; start request repeated too quickly, giving up", "expected": {"service": "systemd", "severity": "critical"}}
+{"id": "log-28", "text": "Sep 23 18:20:44 nas01 apcupsd[611]: Power failure. Running on UPS batteries, 4 minutes remaining; initiating shutdown", "expected": {"service": "apcupsd", "severity": "critical"}}
+{"id": "log-29", "text": "Sep 23 19:02:10 pve1 kernel: EXT4-fs error (device nvme0n1p2): ext4_journal_check_start:83: Detected aborted journal; remounting filesystem read-only", "expected": {"service": "kernel", "severity": "critical"}}
+{"id": "log-30", "text": "Sep 23 06:31:00 nas01 smartd[733]: Device: /dev/sdd [SAT], FAILED SMART self-check. BACK UP DATA NOW!", "expected": {"service": "smartd", "severity": "critical"}}
+{"id": "ticket-01", "text": "Hi, I was charged twice for my March subscription. Can you refund the duplicate charge when you get a chance?", "expected": {"category": "billing", "urgent": false}}
+{"id": "ticket-02", "text": "Can I get an invoice with our company VAT number on it? Accounting needs it for last quarter.", "expected": {"category": "billing", "urgent": false}}
+{"id": "ticket-03", "text": "Your system charged my card $4,800 instead of $48. That is my rent money. Please reverse this TODAY.", "expected": {"category": "billing", "urgent": true}}
+{"id": "ticket-04", "text": "How do I switch from monthly to annual billing? I'd like the discount.", "expected": {"category": "billing", "urgent": false}}
+{"id": "ticket-05", "text": "Is there a student discount? I just started at university.", "expected": {"category": "billing", "urgent": false}}
+{"id": "ticket-06", "text": "Our payment failed and the dashboard says the account will be suspended in 2 hours. We have a launch tonight, please help.", "expected": {"category": "billing", "urgent": true}}
+{"id": "ticket-07", "text": "The dark mode toggle doesn't remember my setting after I log out. Minor, just FYI.", "expected": {"category": "bug", "urgent": false}}
+{"id": "ticket-08", "text": "Since this morning's update none of our users can save documents \u2014 every save throws 'Error 500'. Our whole team is blocked.", "expected": {"category": "bug", "urgent": true}}
+{"id": "ticket-09", "text": "Typo on the pricing page: 'Proffesional' should be 'Professional'.", "expected": {"category": "bug", "urgent": false}}
+{"id": "ticket-10", "text": "CSV export puts the date column in the wrong timezone. Workaround is fine for now.", "expected": {"category": "bug", "urgent": false}}
+{"id": "ticket-11", "text": "Data is being deleted! When two people edit the same record, one person's changes vanish completely. We've lost a day of work.", "expected": {"category": "bug", "urgent": true}}
+{"id": "ticket-12", "text": "The mobile app crashes when I rotate the screen on the settings page. Android 15, Pixel 8.", "expected": {"category": "bug", "urgent": false}}
+{"id": "ticket-13", "text": "Would love a keyboard shortcut to archive items. Would save me a lot of clicks.", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-14", "text": "Any plans to support SSO with Okta? It would help us roll this out company-wide next year.", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-15", "text": "Could you add a way to export reports as PDF?", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-16", "text": "Please add Webhooks for when a task is completed so we can hook it into Slack.", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-17", "text": "It would be nice if the calendar view could start the week on Monday.", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-18", "text": "Suggestion: let us pin favorite projects to the top of the sidebar.", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-19", "text": "I changed my email address and now I'm not sure which one to log in with. Can you check?", "expected": {"category": "account-access", "urgent": false}}
+{"id": "ticket-20", "text": "I'm locked out and our payroll runs in one hour \u2014 I'm the only admin. The 2FA codes aren't arriving.", "expected": {"category": "account-access", "urgent": true}}
+{"id": "ticket-21", "text": "How do I add a second admin to our workspace?", "expected": {"category": "account-access", "urgent": false}}
+{"id": "ticket-22", "text": "Someone changed my password and email without my permission. I think my account was hacked, please lock it now.", "expected": {"category": "account-access", "urgent": true}}
+{"id": "ticket-23", "text": "The password reset email went to spam, but it worked. Maybe look at your email settings?", "expected": {"category": "account-access", "urgent": false}}
+{"id": "ticket-24", "text": "Can you delete my old account under my personal email? I only use the work one now.", "expected": {"category": "account-access", "urgent": false}}
+{"id": "ticket-25", "text": "My order #10442 says shipped but tracking hasn't updated in 3 days. Any news?", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-26", "text": "Can I change the delivery address on an order I placed an hour ago?", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-27", "text": "The replacement insulin cooler I ordered hasn't arrived and my medication will spoil tomorrow. Where is it?", "expected": {"category": "shipping", "urgent": true}}
+{"id": "ticket-28", "text": "Do you ship to Canada? I didn't see it in the country list.", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-29", "text": "Package arrived with a dented box but the item inside seems fine. Just letting you know.", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-30", "text": "Wrong item delivered for our wedding tomorrow \u2014 we got 12 chairs instead of 120. We need the rest urgently.", "expected": {"category": "shipping", "urgent": true}}
+{"id": "event-01", "text": "Dentist appointment confirmed for October 6, 2026 at 2:30 PM. Please arrive 10 minutes early.", "expected": {"date": "2026-10-06", "startTime": "14:30", "durationMinutes": null}}
+{"id": "event-02", "text": "Hey! Lunch tomorrow at noon at the Thai place on 5th?", "expected": {"date": "2026-09-24", "startTime": "12:00", "durationMinutes": null}}
+{"id": "event-03", "text": "Reminder: quarterly planning is this Friday from 9 to 11am in the big conference room.", "expected": {"date": "2026-09-25", "startTime": "09:00", "durationMinutes": 120}}
+{"id": "event-04", "text": "Can we move our 1:1 to next Tuesday at 3pm? Same Zoom link, 30 min.", "expected": {"date": "2026-09-29", "startTime": "15:00", "durationMinutes": 30}}
+{"id": "event-05", "text": "Your flight UA 1432 departs Nov 2 at 07:15 from SFO.", "expected": {"date": "2026-11-02", "startTime": "07:15", "durationMinutes": null}}
+{"id": "event-06", "text": "Book club meets Sunday at 4 \u2014 bring snacks! We usually go about two hours.", "expected": {"date": "2026-09-27", "startTime": "16:00", "durationMinutes": 120}}
+{"id": "event-07", "text": "The plumber will come by on Monday between 8 and 10 in the morning.", "expected": {"date": "2026-09-28", "startTime": "08:00", "durationMinutes": 120}}
+{"id": "event-08", "text": "Team offsite: October 15th, 9:30am\u20134:30pm, Riverside Hall.", "expected": {"date": "2026-10-15", "startTime": "09:30", "durationMinutes": 420}}
+{"id": "event-09", "text": "Pickup for the kids' soccer practice is at 5:45pm today.", "expected": {"date": "2026-09-23", "startTime": "17:45", "durationMinutes": null}}
+{"id": "event-10", "text": "Webinar: 'Intro to ZFS' on 2026-10-01 at 18:00 UTC, runs 90 minutes.", "expected": {"date": "2026-10-01", "startTime": "18:00", "durationMinutes": 90}}
+{"id": "event-11", "text": "Let's do the code review Thursday at 10:15, should take 45 minutes max.", "expected": {"date": "2026-09-24", "startTime": "10:15", "durationMinutes": 45}}
+{"id": "event-12", "text": "Parent-teacher conference scheduled for 10/08 at 6:30 PM (15-minute slot).", "expected": {"date": "2026-10-08", "startTime": "18:30", "durationMinutes": 15}}
+{"id": "event-13", "text": "Can you make a call the day after tomorrow at 11? Only need 20 min.", "expected": {"date": "2026-09-25", "startTime": "11:00", "durationMinutes": 20}}
+{"id": "event-14", "text": "Oil change booked for Saturday, 8 AM sharp.", "expected": {"date": "2026-09-26", "startTime": "08:00", "durationMinutes": null}}
+{"id": "event-15", "text": "Your vaccination appointment: Tue 13 Oct 2026, 09:40.", "expected": {"date": "2026-10-13", "startTime": "09:40", "durationMinutes": null}}
+{"id": "event-16", "text": "Standup is moved to 9:05 starting next Monday.", "expected": {"date": "2026-09-28", "startTime": "09:05", "durationMinutes": null}}
+{"id": "event-17", "text": "Concert tickets: December 12, doors 7pm, show at 8pm.", "expected": {"date": "2026-12-12", "startTime": "20:00", "durationMinutes": null}}
+{"id": "event-18", "text": "Movie night next Friday at 7:30pm, a 3 hour epic so plan accordingly.", "expected": {"date": "2026-09-25", "startTime": "19:30", "durationMinutes": 180}}
+{"id": "event-19", "text": "Interview with Acme Corp on Oct 20 at 1pm Pacific; it's a 1-hour panel.", "expected": {"date": "2026-10-20", "startTime": "13:00", "durationMinutes": 60}}
+{"id": "event-20", "text": "Garbage pickup changed to Thursdays at 6am.", "expected": {"date": "2026-09-24", "startTime": "06:00", "durationMinutes": null}}
+{"id": "event-21", "text": "Yoga class tonight 8:15\u20139:00pm.", "expected": {"date": "2026-09-23", "startTime": "20:15", "durationMinutes": 45}}
+{"id": "event-22", "text": "Vet checkup for Luna on September 30 at 4:20pm.", "expected": {"date": "2026-09-30", "startTime": "16:20", "durationMinutes": null}}
+{"id": "event-23", "text": "Board meeting Monday 28 September, 14:00\u201315:30 CET.", "expected": {"date": "2026-09-28", "startTime": "14:00", "durationMinutes": 90}}
+{"id": "event-24", "text": "Haircut next Wednesday at half past ten in the morning.", "expected": {"date": "2026-09-30", "startTime": "10:30", "durationMinutes": null}}
+{"id": "event-25", "text": "The furnace inspection is at 1 o'clock on the 2nd of October, about an hour.", "expected": {"date": "2026-10-02", "startTime": "13:00", "durationMinutes": 60}}
+{"id": "event-26", "text": "Hackathon kicks off on Friday October 9 at 6pm and runs 24 hours.", "expected": {"date": "2026-10-09", "startTime": "18:00", "durationMinutes": 1440}}
+{"id": "event-27", "text": "Pay the property tax by Nov 30 \u2014 portal closes at 5pm.", "expected": {"date": "2026-11-30", "startTime": "17:00", "durationMinutes": null}}
+{"id": "event-28", "text": "Coffee with Sam in two weeks, same time as today: 8:45am.", "expected": {"date": "2026-10-07", "startTime": "08:45", "durationMinutes": null}}
+{"id": "event-29", "text": "Election day is Tuesday, November 3, 2026; polls open at 7 AM.", "expected": {"date": "2026-11-03", "startTime": "07:00", "durationMinutes": null}}
+{"id": "event-30", "text": "Family dinner at mom's this Saturday at 6:30 in the evening.", "expected": {"date": "2026-09-26", "startTime": "18:30", "durationMinutes": null}}
