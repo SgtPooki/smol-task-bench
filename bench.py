@@ -12,7 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 TASKS, RESULTS = ROOT / "tasks", ROOT / "results"
-SCORER_VERSION = 2  # bump when field_ok/score semantics change
+SCORER_VERSION = 3  # bump when field_ok/score semantics change
 
 
 def load_task(name):
@@ -44,16 +44,21 @@ def user_content(task_dir, task, item):
     return [{"type": "text", "text": text}, {"type": "image_url", "image_url": {"url": url}}]
 
 
-def request_body(model, task, content, extra):
-    return {
+def request_body(model, task, content, extra, constrained=True):
+    system = task["instructions"]
+    if not constrained:  # schema goes in the prompt instead of the backend's constrained decoder
+        system += "\n\nRespond with only a JSON object matching this JSON Schema:\n" + json.dumps(task["schema"])
+    body = {
         "model": model,
         "stream": False,  # fm serve streams unless told otherwise
         "temperature": 0,
-        "messages": [{"role": "system", "content": task["instructions"]}, {"role": "user", "content": content}],
-        "response_format": {"type": "json_schema",
-                            "json_schema": {"name": task["name"], "schema": task["schema"], "strict": True}},
+        "messages": [{"role": "system", "content": system}, {"role": "user", "content": content}],
         **extra,
     }
+    if constrained:
+        body["response_format"] = {"type": "json_schema",
+                                   "json_schema": {"name": task["name"], "schema": task["schema"], "strict": True}}
+    return body
 
 
 def call(base_url, body, timeout):
@@ -148,6 +153,9 @@ def outcome(rec):
 
 def score(task, raw, expected):
     """-> dict(json_ok, schema_ok, schema_errors, fields)"""
+    if raw is not None:  # unconstrained models often wrap JSON in one markdown fence
+        m = re.fullmatch(r"\s*```(?:json)?\s*(.*?)\s*```\s*", raw, re.S)
+        raw = m[1] if m else raw
     try:
         out = json.loads(raw) if raw is not None else None
     except (json.JSONDecodeError, TypeError):
@@ -188,13 +196,15 @@ def server_info(base_url, model):
         tags = get_json(f"{host}/api/tags") or {}
         info["digest"] = next((m["digest"] for m in tags.get("models", []) if m["name"] == model), None)
         info["details"] = (get_json(f"{host}/api/show", {"model": model}) or {}).get("details")
+        loaded = (get_json(f"{host}/api/ps") or {}).get("models", [])
+        info["context_length"] = next((m.get("context_length") for m in loaded if m["name"] == model), None)
     return info
 
 
 def run_config(a, names, extra):
     # only settings that change what a result means; --limit and --timeout may differ between resumes
-    return {"model": a.model, "base_url": a.base_url, "extra": extra, "scorer_version": SCORER_VERSION,
-            "task_hashes": {n: task_hash(n) for n in names}}
+    return {"model": a.model, "base_url": a.base_url, "extra": extra, "constrained": not a.no_schema,
+            "scorer_version": SCORER_VERSION, "task_hashes": {n: task_hash(n) for n in names}}
 
 
 def write_manifest(label_dir, config):
@@ -264,13 +274,14 @@ def cmd_run(a):
         print(f"[{a.label}] {name}: {len(todo)} to run ({len(done)} cached)", file=sys.stderr)
         with out.open("a") as f:
             for n, item in enumerate(todo, 1):
-                body = request_body(a.model, task, user_content(task_dir, task, item), extra)
+                body = request_body(a.model, task, user_content(task_dir, task, item), extra, not a.no_schema)
                 raw, err, secs = call(a.base_url, body, a.timeout)
                 rec = {"id": item["id"], "raw": raw, "error": err, "seconds": round(secs, 3),
                        "expected": item["expected"], **score(task, raw, item["expected"])}
                 f.write(json.dumps(rec) + "\n")
                 f.flush()
                 print(f"  {n}/{len(todo)} {item['id']} {outcome(rec)} {secs:.1f}s", file=sys.stderr)
+    write_manifest(label_dir, config)  # again, now that the model is loaded (records ollama's context_length)
 
 
 # ---------- report ----------
@@ -357,6 +368,9 @@ def main():
     r.add_argument("--timeout", type=float, default=300)
     r.add_argument("--retry-errors", action="store_true", help="re-run items that failed with a transport error or refusal")
     r.add_argument("--overwrite", action="store_true", help="delete results/<label>/ before running")
+    r.add_argument("--no-schema", action="store_true",
+                   help="omit response_format and put the schema in the system prompt (measures the model without "
+                        "the backend's constrained decoding)")
     r.set_defaults(fn=cmd_run)
     rp = sub.add_parser("report", help="markdown table of all results, re-scored with the current scorer")
     rp.add_argument("--vs", metavar="LABEL", help="add a paired comparison of every model against LABEL")

@@ -104,6 +104,17 @@ List every property in `required`. Apple's Foundation Model rejects union types 
 
 Run `python3 test_bench.py` after editing. It checks the scorers, schema validation, and resume handling, and verifies that every task lists all properties as required and that every item's `expected` values satisfy the task schema.
 
+## Fairness and limitations
+
+Results measure a model together with its serving stack, not the model weights alone.
+
+- **Constrained decoding differs by backend.** `fm serve` enforces the schema with Apple's guided generation, and ollama compiles it to its own grammar. `--no-schema` sends the schema in the system prompt instead, so a model's answers can be compared with and without its backend's decoder. Without a schema, the scorer accepts JSON wrapped in one markdown code fence.
+- **Determinism.** At `temperature: 0`, Apple FM and gemma3:4b returned identical outputs on 12 of 12 repeated items, so each reference result comes from one run.
+- **Context size.** ollama loaded gemma3:4b with a 131,072-token context, so receipt images aren't truncated. The manifest records the loaded context size per run.
+- **Thinking models.** With `--extra '{"reasoning_effort":"none"}'`, Qwen3 on ollama returned 16 completion tokens and no reasoning text for a support ticket, against 670 tokens with thinking on.
+- **Hand-written items.** The text tasks were written by one author and audited by four AI annotators; see [`annotations/`](annotations/). A human second annotator is tracked in [#4](https://github.com/SgtPooki/smol-task-bench/issues/4).
+- **Contamination.** CORD-v2 is a widely used document-AI dataset and is likely in the training data of open vision models. Whether Apple FM saw it is unknown. Treat receipt results as an upper bound until a fresh receipt set is added ([#8](https://github.com/SgtPooki/smol-task-bench/issues/8)).
+
 ## Apple Foundation Model notes
 
 - `fm serve` streams responses unless the request sets `"stream": false`. The runner always sets it.
