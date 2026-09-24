@@ -23,7 +23,7 @@ Share of items with every field correct, constrained track (`response_format: js
 With 30 to 40 items per task, most differences under about 20 points are not significant. Paired McNemar tests against Apple FM (`python3 bench.py report --vs apple-fm`) find:
 
 - **log-triage and support-tickets:** no model without thinking differs significantly from Apple FM (p ≥ 0.109).
-- **event-extraction:** gemma3:4b, llama3.2:3b, and qwen2.5vl:3b beat Apple FM (p ≤ 0.016). 10 of Apple FM's 30 answers are `overflow`: guided generation loops until it fills the context window ([#21](https://github.com/SgtPooki/smol-task-bench/issues/21)). Its field accuracy on the items it did answer is 81.7%.
+- **event-extraction:** gemma3:4b, llama3.2:3b, and qwen2.5vl:3b beat Apple FM (p ≤ 0.016). 10 of Apple FM's 30 answers are `overflow`: guided generation loops until it fills the context window when the schema lacks `fm`'s `"x-order"` key ([#21](https://github.com/SgtPooki/smol-task-bench/issues/21)). Its field accuracy on the items it did answer is 81.7%.
 - **receipts (CORD):** qwen2.5vl:3b beats Apple FM (p = 0.035), and Apple FM beats gemma3:4b (p = 0.019). gemma3:4b reads 37 of 40 totals correctly but counts item lines correctly on only 12.
 - **receipts-synthetic:** qwen2.5vl:3b beats Apple FM (p = 0.049). Apple FM reads all 12 yen totals correctly but only 3 of 28 totals with cents: it drops or misplaces the decimal point (for example 108.45 read as 10845). qwen2.5vl:3b reads all 40 totals correctly. Item-line counting is the hardest field for every model (10 to 25 of 40).
 - **Thinking:** qwen3:4b with thinking on is the most accurate model on every text task, at 11 to 98 seconds per item.
@@ -151,7 +151,8 @@ Results measure a model together with its serving stack, not the model weights a
 - The only model name `fm serve` accepts is `system`.
 - The context window holds about 4,096 tokens, including instructions and output. Every task item fits well within it.
 - Image input works through the standard `image_url` content part with a base64 data URL.
-- `fm serve` doesn't enforce `max_tokens`. With a required integer field and an unrelated number in the input (for example "arrive 10 minutes early"), generation can run until it fills the context window, about 85 seconds on an M1 Max, and then fail. The report counts these as `overflow`.
+- `fm serve` accepts standard JSON Schema, but a schema without the `"x-order"` key (the property-order list that `fm schema` always emits) can make guided generation loop until it fills the context window, about 85 seconds on an M1 Max, and then fail. The report counts these as `overflow`. Adding `"x-order"` removed the overflow on all 10 affected event-extraction items. The reference runs keep the standard schema that OpenAI-compatible clients send. Reported to Apple as FB24922665 ([#21](https://github.com/SgtPooki/smol-task-bench/issues/21)).
+- `fm serve` doesn't enforce `max_tokens`.
 - `fm serve` processes one request at a time and keeps generating after a client times out, so a short `--timeout` delays every later request. Keep the default of 300 seconds.
 
 ## Data and license
