@@ -44,6 +44,8 @@ b = bench.request_body("m", {"name": "n", "instructions": "I", "schema": schema}
 assert b["response_format"]["json_schema"]["schema"] == schema and b["stream"] is False
 b = bench.request_body("m", {"name": "n", "instructions": "I", "schema": schema}, "hi", {}, constrained=False)
 assert "response_format" not in b and json.dumps(schema) in b["messages"][0]["content"]
+b = bench.request_body("m", {"name": "n", "instructions": "I", "schema": schema}, "hi", {}, instructions_in_user=True)
+assert [m["role"] for m in b["messages"]] == ["user"] and b["messages"][0]["content"] == "I\n\nhi"
 
 lo, hi = bench.wilson(80, 100)
 assert 0.71 < lo < 0.72 and 0.86 < hi < 0.87
@@ -55,19 +57,24 @@ with tempfile.TemporaryDirectory() as d:
     p.write_text('{"id": "a"}\n\n{"id": "b"}\n{"id": "c", "ra')
     assert [r["id"] for r in bench.read_records(p)] == ["a", "b"]
 old = {"model": "m", "task_hashes": {"x": "1"}}
-assert bench.check_resumable(old, {"model": "m", "task_hashes": {"x": "1", "y": "2"}})  # adding a task is fine
-assert not bench.check_resumable(old, {"model": "m", "task_hashes": {"x": "9"}})  # task data changed
-assert not bench.check_resumable(old, {"model": "other", "task_hashes": {"x": "1"}})
+assert bench.check_resumable(old, {"model": "m", "task_hashes": {"x": "1", "y": "2"}}) == []  # adding a task is fine
+assert bench.check_resumable(old, {"model": "m", "task_hashes": {"x": "9"}}) == ["x"]  # task data changed: rerun x
+assert bench.check_resumable(old, {"model": "other", "task_hashes": {"x": "1"}}) is None  # settings changed: refuse
+
+# the test split is frozen: changing task.json or test items requires a deliberate tasks/FROZEN.json update
+frozen = json.loads((bench.TASKS / "FROZEN.json").read_text())
+for name, h in frozen.items():
+    assert bench.task_hash(name) == h, f"{name} test data changed; tune on --split dev, or update tasks/FROZEN.json on purpose"
 
 # task data: required covers every property, expected values satisfy the schema, ids unique, images exist
-for d in bench.TASKS.iterdir():
-    if not (d / "task.json").exists():
-        continue
-    _, t, items = bench.load_task(d.name)
+for d, split in [(d, s) for d in bench.TASKS.iterdir() if (d / "task.json").exists() for s in bench.SPLITS
+                 if (d / bench.SPLITS[s]).exists()]:
+    _, t, items = bench.load_task(d.name, split)
+    assert d.name in frozen, (d.name, "missing from tasks/FROZEN.json")
     assert items, d.name
     assert set(t["schema"]["required"]) == set(t["schema"]["properties"]), (d.name, "every property must be required")
     assert set(t["fields"]) <= set(t["schema"]["properties"]), d.name
-    assert len({i["id"] for i in items}) == len(items), (d.name, "duplicate ids")
+    assert len({i["id"] for i in items}) == len(items), (d.name, split, "duplicate ids")
     for it in items:
         assert set(it["expected"]) == set(t["fields"]), (d.name, it["id"])
         assert bench.schema_errors(t["schema"], it["expected"]) == [], (d.name, it["id"])

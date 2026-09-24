@@ -7,12 +7,13 @@
     "scorer_version": 3,
     "task_hashes": {
       "event-extraction": "1a7c6adc8c075cdf3521724f32b71293cb7311b71ce7d1ac487b5f936ea6786a",
-      "log-triage": "49844eb71624b58a5d78f6b96a3088f9444ba8d60b1ff6fcdd514588ca2b4949",
-      "receipts": "a4d0bddb9c00e2074336a24fd70aef92a685f2b57af35aabe822aa63e789061f",
-      "support-tickets": "27d7e0a7b44205a43fb6434cc18880776fef061137dc822cdaec7991453b9692"
+      "log-triage": "43b992d62ce0d00054ebc329a561565d24d14938af779491298c3276302ee908",
+      "receipts": "888bffcaf0880007512d421f7d7bf5413f85b9f0260314bb4160abfb3b15a9e9",
+      "support-tickets": "27d7e0a7b44205a43fb6434cc18880776fef061137dc822cdaec7991453b9692",
+      "receipts-synthetic": "6811bf58902d5ed5e50f9ea1e0906416c3d257e94faa9b6a00cfeb3fe9615dd7"
     }
   },
-  "created": "2026-09-23T21:51:37+00:00",
+  "created": "2026-09-24T01:28:36+00:00",
   "host": {
     "platform": "macOS-27.0-arm64-arm-64bit-Mach-O",
     "macos": "27.0",
@@ -24,88 +25,11 @@
     "python": "3.14.7"
   },
   "server": {
-    "models": {
-      "object": "list",
-      "data": [
-        {
-          "id": "qwen2.5vl:3b",
-          "object": "model",
-          "created": 1790190123,
-          "owned_by": "library"
-        },
-        {
-          "id": "gemma3:4b",
-          "object": "model",
-          "created": 1790190090,
-          "owned_by": "library"
-        },
-        {
-          "id": "llama3.2:3b",
-          "object": "model",
-          "created": 1790190056,
-          "owned_by": "library"
-        },
-        {
-          "id": "qwen3:4b",
-          "object": "model",
-          "created": 1790190031,
-          "owned_by": "library"
-        },
-        {
-          "id": "antares-1b-vloc:latest",
-          "object": "model",
-          "created": 1784819589,
-          "owned_by": "library"
-        },
-        {
-          "id": "hf.co/mitkox/antares-1b-Q8_0-GGUF:Q8_0",
-          "object": "model",
-          "created": 1784819588,
-          "owned_by": "mitkox"
-        },
-        {
-          "id": "hf.co/unsloth/gemma-4-26B-A4B-it-qat-GGUF:UD-Q4_K_XL",
-          "object": "model",
-          "created": 1784748082,
-          "owned_by": "unsloth"
-        },
-        {
-          "id": "nomic-embed-text:latest",
-          "object": "model",
-          "created": 1781218459,
-          "owned_by": "library"
-        },
-        {
-          "id": "bge-m3:latest",
-          "object": "model",
-          "created": 1779138427,
-          "owned_by": "library"
-        },
-        {
-          "id": "bge-large:latest",
-          "object": "model",
-          "created": 1779134415,
-          "owned_by": "library"
-        },
-        {
-          "id": "mxbai-embed-large:latest",
-          "object": "model",
-          "created": 1778532547,
-          "owned_by": "library"
-        },
-        {
-          "id": "gemma4:31b-q8",
-          "object": "model",
-          "created": 1776952567,
-          "owned_by": "library"
-        },
-        {
-          "id": "gpt-oss:20b",
-          "object": "model",
-          "created": 1776706959,
-          "owned_by": "library"
-        }
-      ]
+    "model": {
+      "id": "gemma3:4b",
+      "object": "model",
+      "created": 1790190090,
+      "owned_by": "library"
     },
     "ollama_version": "0.34.3",
     "digest": "a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a",
@@ -119,6 +43,6 @@
       "parameter_size": "4.3B",
       "quantization_level": "Q4_K_M"
     },
-    "context_length": null
+    "context_length": 131072
   }
 }

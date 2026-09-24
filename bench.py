@@ -15,17 +15,20 @@ TASKS, RESULTS = ROOT / "tasks", ROOT / "results"
 SCORER_VERSION = 3  # bump when field_ok/score semantics change
 
 
-def load_task(name):
+SPLITS = {"test": "items.jsonl", "dev": "dev.jsonl"}  # tune prompts on dev; test is frozen (tasks/FROZEN.json)
+
+
+def load_task(name, split="test"):
     d = TASKS / name
     task = json.loads((d / "task.json").read_text())
-    items = [json.loads(l) for l in (d / "items.jsonl").read_text().splitlines() if l.strip()]
+    items = [json.loads(l) for l in (d / SPLITS[split]).read_text().splitlines() if l.strip()]
     return d, task, items
 
 
-def task_hash(name):
-    """sha256 over task.json, items.jsonl, and every referenced image."""
-    d, _, items = load_task(name)
-    h = hashlib.sha256((d / "task.json").read_bytes() + (d / "items.jsonl").read_bytes())
+def task_hash(name, split="test"):
+    """sha256 over task.json, the split's items file, and every referenced image."""
+    d, _, items = load_task(name, split)
+    h = hashlib.sha256((d / "task.json").read_bytes() + (d / SPLITS[split]).read_bytes())
     for it in items:
         if "image" in it:
             h.update((d / it["image"]).read_bytes())
@@ -44,15 +47,23 @@ def user_content(task_dir, task, item):
     return [{"type": "text", "text": text}, {"type": "image_url", "image_url": {"url": url}}]
 
 
-def request_body(model, task, content, extra, constrained=True):
+def request_body(model, task, content, extra, constrained=True, instructions_in_user=False):
     system = task["instructions"]
     if not constrained:  # schema goes in the prompt instead of the backend's constrained decoder
         system += "\n\nRespond with only a JSON object matching this JSON Schema:\n" + json.dumps(task["schema"])
+    if instructions_in_user:  # some small models follow user-turn instructions better than a system message
+        if isinstance(content, str):
+            content = f"{system}\n\n{content}"
+        else:
+            content = [{"type": "text", "text": system}, *content]
+        messages = [{"role": "user", "content": content}]
+    else:
+        messages = [{"role": "system", "content": system}, {"role": "user", "content": content}]
     body = {
         "model": model,
         "stream": False,  # fm serve streams unless told otherwise
         "temperature": 0,
-        "messages": [{"role": "system", "content": system}, {"role": "user", "content": content}],
+        "messages": messages,
         **extra,
     }
     if constrained:
@@ -189,7 +200,8 @@ def get_json(url, data=None):
 def server_info(base_url, model):
     """Best-effort server/model identity: ollama version, digest, quantization; /v1/models for anything else."""
     host = re.sub(r"/v1/?$", "", base_url.rstrip("/"))
-    info = {"models": get_json(f"{base_url.rstrip('/')}/models")}
+    listed = (get_json(f"{base_url.rstrip('/')}/models") or {}).get("data", [])
+    info = {"model": next((m for m in listed if m.get("id") == model), None)}  # never the full local model list
     ver = get_json(f"{host}/api/version")
     if ver:
         info["ollama_version"] = ver.get("version")
@@ -203,8 +215,14 @@ def server_info(base_url, model):
 
 def run_config(a, names, extra):
     # only settings that change what a result means; --limit and --timeout may differ between resumes
-    return {"model": a.model, "base_url": a.base_url, "extra": extra, "constrained": not a.no_schema,
-            "scorer_version": SCORER_VERSION, "task_hashes": {n: task_hash(n) for n in names}}
+    config = {"model": a.model, "base_url": a.base_url, "extra": extra, "constrained": not a.no_schema,
+              "scorer_version": SCORER_VERSION, "task_hashes": {n: task_hash(n, a.split) for n in names}}
+    # only recorded when set, so existing manifests stay resumable
+    if a.instructions_in_user:
+        config["instructions_in_user"] = True
+    if a.split != "test":
+        config["split"] = a.split
+    return config
 
 
 def write_manifest(label_dir, config):
@@ -236,14 +254,16 @@ def read_records(path):
 
 
 def check_resumable(old, new):
-    """A resumed run may add tasks, but every setting and every shared task hash must match."""
+    """A resumed run must use the same settings. -> task names whose data changed since their results were saved"""
     strip = lambda c: {k: v for k, v in c.items() if k != "task_hashes"}
-    return strip(old) == strip(new) and all(old["task_hashes"].get(n, h) == h for n, h in new["task_hashes"].items())
+    if strip(old) != strip(new):
+        return None
+    return [n for n, h in new["task_hashes"].items() if old["task_hashes"].get(n, h) != h]
 
 
 def cmd_run(a):
     extra = json.loads(a.extra) if a.extra else {}
-    names = a.tasks.split(",") if a.tasks else sorted(p.name for p in TASKS.iterdir() if (p / "task.json").exists())
+    names = a.tasks.split(",") if a.tasks else sorted(p.name for p in TASKS.iterdir() if (p / SPLITS[a.split]).exists())
     label_dir = RESULTS / a.label
     if a.overwrite and label_dir.exists():
         shutil.rmtree(label_dir)
@@ -252,16 +272,19 @@ def cmd_run(a):
     mpath = label_dir / "manifest.json"
     if mpath.exists():
         old = json.loads(mpath.read_text())["config"]
-        if not check_resumable(old, config):
-            sys.exit(f"results/{a.label} was produced with a different config or task data; "
-                     f"use a new --label or pass --overwrite")
+        changed = check_resumable(old, config)
+        if changed is None:
+            sys.exit(f"results/{a.label} was produced with different settings; use a new --label or pass --overwrite")
+        for name in changed:  # task data changed: old answers were scored against different items
+            print(f"[{a.label}] {name}: task data changed, discarding old results", file=sys.stderr)
+            (label_dir / f"{name}.jsonl").unlink(missing_ok=True)
         config["task_hashes"] = {**old["task_hashes"], **config["task_hashes"]}
     elif any(label_dir.glob("*.jsonl")):
         sys.exit(f"results/{a.label} has results but no manifest; use a new --label or pass --overwrite")
     write_manifest(label_dir, config)
 
     for name in names:
-        task_dir, task, items = load_task(name)
+        task_dir, task, items = load_task(name, a.split)
         if a.limit:
             items = items[: a.limit]
         out = label_dir / f"{name}.jsonl"
@@ -274,7 +297,8 @@ def cmd_run(a):
         print(f"[{a.label}] {name}: {len(todo)} to run ({len(done)} cached)", file=sys.stderr)
         with out.open("a") as f:
             for n, item in enumerate(todo, 1):
-                body = request_body(a.model, task, user_content(task_dir, task, item), extra, not a.no_schema)
+                body = request_body(a.model, task, user_content(task_dir, task, item), extra, not a.no_schema,
+                                    a.instructions_in_user)
                 raw, err, secs = call(a.base_url, body, a.timeout)
                 rec = {"id": item["id"], "raw": raw, "error": err, "seconds": round(secs, 3),
                        "expected": item["expected"], **score(task, raw, item["expected"])}
@@ -302,16 +326,23 @@ def mcnemar_p(b, c):
     return min(1.0, 2 * sum(math.comb(n, i) for i in range(min(b, c) + 1)) / 2 ** n)
 
 
+def label_split(label_dir):
+    m = label_dir / "manifest.json"
+    return json.loads(m.read_text())["config"].get("split", "test") if m.exists() else "test"
+
+
 def rescored(label_dir, name):
     """Re-score saved raw outputs against current task data. -> (records by id, stale)"""
-    if not (TASKS / name / "task.json").exists():
+    split = label_split(label_dir)
+    if not (TASKS / name / SPLITS[split]).exists():
         return {}, True
-    _, task, items = load_task(name)
+    _, task, items = load_task(name, split)
     exp = {i["id"]: i["expected"] for i in items}
     recs = {r["id"]: {**r, **score(task, r["raw"], exp[r["id"]])}
             for r in read_records(label_dir / f"{name}.jsonl") if r["id"] in exp}
     manifest = label_dir / "manifest.json"
-    stale = not manifest.exists() or json.loads(manifest.read_text())["config"]["task_hashes"].get(name) != task_hash(name)
+    stale = (not manifest.exists()
+             or json.loads(manifest.read_text())["config"]["task_hashes"].get(name) != task_hash(name, split))
     return recs, stale
 
 
@@ -324,7 +355,7 @@ def cmd_report(a):
                 continue
             by[(f.stem, label_dir.name)] = recs
             vals = list(recs.values())
-            n, total = len(vals), len(load_task(f.stem)[2])
+            n, total = len(vals), len(load_task(f.stem, label_split(label_dir))[2])
             oc = [outcome(r) for r in vals]
             k = oc.count("correct")
             lo, hi = wilson(k, n)
@@ -364,10 +395,13 @@ def main():
     r.add_argument("--model", required=True)
     r.add_argument("--tasks", help="comma-separated task names (default: all)")
     r.add_argument("--limit", type=int, help="first N items per task")
+    r.add_argument("--split", choices=SPLITS, default="test", help="test (frozen, default) or dev (for prompt tuning)")
     r.add_argument("--extra", help="JSON merged into the request body, e.g. '{\"reasoning_effort\":\"none\"}'")
     r.add_argument("--timeout", type=float, default=300)
     r.add_argument("--retry-errors", action="store_true", help="re-run items that failed with a transport error or refusal")
     r.add_argument("--overwrite", action="store_true", help="delete results/<label>/ before running")
+    r.add_argument("--instructions-in-user", action="store_true",
+                   help="send task instructions in the user message instead of a system message")
     r.add_argument("--no-schema", action="store_true",
                    help="omit response_format and put the schema in the system prompt (measures the model without "
                         "the backend's constrained decoding)")
