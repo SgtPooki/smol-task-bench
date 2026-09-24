@@ -49,9 +49,11 @@ assert bench.outcome(rec(None, "HTTP 500: The model's safety guardrails were tri
 assert bench.outcome(rec(None, 'HTTP 500: {"error":{"message":"The model refused to answer."}}')) == "refusal"
 assert bench.outcome(rec(None, "TimeoutError()")) == "transport"
 assert bench.outcome(rec(None, "HTTP 500: The session's transcript exceeded the model's context size.")) == "overflow"
+assert bench.outcome(rec(None, bench.OVERFLOW + " (max_tokens)")) == "overflow"
 
 b = bench.request_body("m", {"name": "n", "instructions": "I", "schema": schema}, "hi", {})
-assert b["response_format"]["json_schema"]["schema"] == schema and b["stream"] is False
+assert b["response_format"]["json_schema"]["schema"] == schema and b["stream"] is False and b["max_tokens"] == bench.MAX_TOKENS
+assert bench.request_body("m", {"name": "n", "instructions": "I", "schema": schema}, "hi", {"max_tokens": 9})["max_tokens"] == 9
 b = bench.request_body("m", {"name": "n", "instructions": "I", "schema": schema}, "hi", {}, constrained=False)
 assert "response_format" not in b and json.dumps(schema) in b["messages"][0]["content"]
 b = bench.request_body("m", {"name": "n", "instructions": "I", "schema": schema}, "hi", {}, instructions_in_user=True)

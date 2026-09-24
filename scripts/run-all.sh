@@ -17,7 +17,7 @@ done
 # runs constrained only (think:false and /no_think still produce reasoning tokens without a schema)
 python3 bench.py run --label qwen3-4b --base-url $O --model qwen3:4b --tasks $TEXT --extra '{"reasoning_effort":"none"}'
 # thinking mode is slow (about 100 s per event item on an M1 Max): constrained only, first 30 items per task
-python3 bench.py run --label qwen3-4b-thinking --base-url $O --model qwen3:4b --tasks $TEXT --limit 30
+python3 bench.py run --label qwen3-4b-thinking --base-url $O --model qwen3:4b --tasks $TEXT --limit 30 --extra '{"max_tokens":16384}'
 # instruction placement check (first 30 items per task): task instructions in the user message, not a system message
 for m in "apple-fm http://localhost:1976/v1 system" "gemma3-4b $O gemma3:4b" "qwen2.5vl-3b $O qwen2.5vl:3b" "llama3.2-3b $O llama3.2:3b"; do
   set -- $m

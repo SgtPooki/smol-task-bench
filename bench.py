@@ -12,6 +12,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 TASKS, RESULTS = ROOT / "tasks", ROOT / "results"
+MAX_TOKENS = 1024
+OVERFLOW = "Generation exceeded the output limit"
 SCORER_VERSION = 4  # bump when field_ok/score semantics change
 
 
@@ -68,6 +70,8 @@ def request_body(model, task, content, extra, constrained=True, instructions_in_
         "model": model,
         "stream": False,  # fm serve streams unless told otherwise
         "temperature": 0,
+        # far above any valid answer; stops runaway generation (fm serve ignores it and overflows its context instead)
+        "max_tokens": MAX_TOKENS,
         "messages": messages,
         **extra,
     }
@@ -85,7 +89,10 @@ def call(base_url, body, timeout):
     try:
         with urllib.request.urlopen(req, timeout=timeout) as r:
             resp = json.load(r)
-        return resp["choices"][0]["message"].get("content") or "", None, time.monotonic() - t
+        choice = resp["choices"][0]
+        if choice.get("finish_reason") == "length":  # cut off at max_tokens: a runaway, like fm serve's overflow
+            return None, f"{OVERFLOW} (max_tokens)", time.monotonic() - t
+        return choice["message"].get("content") or "", None, time.monotonic() - t
     except urllib.error.HTTPError as e:
         return None, f"HTTP {e.code}: {e.read()[:2000].decode(errors='replace')}", time.monotonic() - t
     except Exception as e:
@@ -163,7 +170,7 @@ def outcome(rec):
         err = (rec["error"] or "").lower()
         if "guardrail" in err or "refused to answer" in err:  # fm serve's two refusal messages
             return "refusal"
-        if "exceeded the model's context size" in err:  # fm serve: output ran past the context window
+        if "exceeded the model's context size" in err or OVERFLOW.lower() in err:  # runaway generation
             return "overflow"
         return "transport"
     if not rec["json_ok"]:
