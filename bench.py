@@ -12,6 +12,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 TASKS, RESULTS = ROOT / "tasks", ROOT / "results"
+MAX_TOKENS = 1024
+OVERFLOW = "Generation exceeded the output limit"
 SCORER_VERSION = 4  # bump when field_ok/score semantics change
 
 
@@ -23,6 +25,12 @@ def load_task(name, split="test"):
     task = json.loads((d / "task.json").read_text())
     items = [json.loads(l) for l in (d / SPLITS[split]).read_text().splitlines() if l.strip()]
     return d, task, items
+
+
+def http_tasks(split="test"):
+    """Task directories bench.py can run: a task.json plus the split's items (tool-calling runs in swift/ instead)."""
+    return sorted(p.name for p in TASKS.iterdir() if (p / "task.json").exists() and (p / SPLITS[split]).exists()
+                  and not json.loads((p / "task.json").read_text()).get("deprecated"))  # deprecated: kept, not run
 
 
 def task_hash(name, split="test"):
@@ -63,6 +71,8 @@ def request_body(model, task, content, extra, constrained=True, instructions_in_
         "model": model,
         "stream": False,  # fm serve streams unless told otherwise
         "temperature": 0,
+        # far above any valid answer; stops runaway generation (fm serve ignores it and overflows its context instead)
+        "max_tokens": MAX_TOKENS,
         "messages": messages,
         **extra,
     }
@@ -80,7 +90,10 @@ def call(base_url, body, timeout):
     try:
         with urllib.request.urlopen(req, timeout=timeout) as r:
             resp = json.load(r)
-        return resp["choices"][0]["message"].get("content") or "", None, time.monotonic() - t
+        choice = resp["choices"][0]
+        if choice.get("finish_reason") == "length":  # cut off at max_tokens: a runaway, like fm serve's overflow
+            return None, f"{OVERFLOW} (max_tokens)", time.monotonic() - t
+        return choice["message"].get("content") or "", None, time.monotonic() - t
     except urllib.error.HTTPError as e:
         return None, f"HTTP {e.code}: {e.read()[:2000].decode(errors='replace')}", time.monotonic() - t
     except Exception as e:
@@ -158,7 +171,7 @@ def outcome(rec):
         err = (rec["error"] or "").lower()
         if "guardrail" in err or "refused to answer" in err:  # fm serve's two refusal messages
             return "refusal"
-        if "exceeded the model's context size" in err:  # fm serve: output ran past the context window
+        if "exceeded the model's context size" in err or OVERFLOW.lower() in err:  # runaway generation
             return "overflow"
         return "transport"
     if not rec["json_ok"]:
@@ -261,7 +274,8 @@ def read_records(path):
 
 def check_resumable(old, new):
     """A resumed run must use the same settings. -> task names whose data changed since their results were saved"""
-    strip = lambda c: {k: v for k, v in c.items() if k != "task_hashes"}
+    # scorer_version is recorded but doesn't block: the report re-scores saved raw answers with the current scorer
+    strip = lambda c: {k: v for k, v in c.items() if k not in ("task_hashes", "scorer_version")}
     if strip(old) != strip(new):
         return None
     return [n for n, h in new["task_hashes"].items() if old["task_hashes"].get(n, h) != h]
@@ -269,7 +283,7 @@ def check_resumable(old, new):
 
 def cmd_run(a):
     extra = json.loads(a.extra) if a.extra else {}
-    names = a.tasks.split(",") if a.tasks else sorted(p.name for p in TASKS.iterdir() if (p / SPLITS[a.split]).exists())
+    names = a.tasks.split(",") if a.tasks else http_tasks(a.split)
     label_dir = RESULTS / a.label
     if a.overwrite and label_dir.exists():
         shutil.rmtree(label_dir)
@@ -340,8 +354,8 @@ def label_split(label_dir):
 def rescored(label_dir, name):
     """Re-score saved raw outputs against current task data. -> (records by id, stale)"""
     split = label_split(label_dir)
-    if not (TASKS / name / SPLITS[split]).exists():
-        return {}, True
+    if not ((TASKS / name / "task.json").exists() and (TASKS / name / SPLITS[split]).exists()):
+        return {}, True  # not a bench.py task (e.g. tool-calling results from swift/toolbench)
     _, task, items = load_task(name, split)
     exp = {i["id"]: i["expected"] for i in items}
     recs = {r["id"]: {**r, **score(task, r["raw"], exp[r["id"]])}
@@ -352,14 +366,46 @@ def rescored(label_dir, name):
     return recs, stale
 
 
+CEILING_LO, SATURATED, DEPRECATE_AFTER_DAYS = 0.90, 0.95, 365
+VARIANTS = ("-noschema", "-userinst", "-repeat")  # labels that re-run a model under a different setting
+
+
+def lifecycle_notes(scores, task_meta, today):
+    """Apply the task lifecycle rules.
+
+    scores: {task: {label: (correct, n)}} for the main constrained track; task_meta: {task: task.json dict}.
+    A task hits the ceiling when any model scores 100% or has a 95% Wilson lower bound >= CEILING_LO: add a
+    harder version. It is saturated when every non-thinking model scores >= SATURATED; after DEPRECATE_AFTER_DAYS
+    of saturation (task.json "saturatedSince"), deprecate it.
+    """
+    notes = []
+    for task, by_label in sorted(scores.items()):
+        main = {l: kn for l, kn in by_label.items() if not l.endswith(VARIANTS) and kn[1]}
+        top = [l for l, (k, n) in main.items() if k == n or wilson(k, n)[0] >= CEILING_LO]
+        if top:
+            notes.append(f"{task}: ceiling reached by {', '.join(sorted(top))}; add a harder version")
+        fast = {l: kn for l, kn in main.items() if "thinking" not in l}
+        since = task_meta.get(task, {}).get("saturatedSince")
+        if len(fast) >= 2 and all(k / n >= SATURATED for k, n in fast.values()):
+            if not since:
+                notes.append(f"{task}: saturated (every non-thinking model >= {SATURATED:.0%}); "
+                             f'set "saturatedSince": "{today.isoformat()}" in task.json')
+            elif (today - datetime.fromisoformat(since).date()).days >= DEPRECATE_AFTER_DAYS:
+                notes.append(f"{task}: saturated since {since}; deprecate it")
+        elif since:
+            notes.append(f'{task}: no longer saturated; remove "saturatedSince" from task.json')
+    return notes
+
+
 def cmd_report(a):
-    rows, by = [], {}
+    rows, by, rescored_complete = [], {}, {}
     for label_dir in sorted(p for p in RESULTS.glob("*") if p.is_dir()):
         for f in sorted(label_dir.glob("*.jsonl")):
             recs, stale = rescored(label_dir, f.stem)
             if not recs:
                 continue
             by[(f.stem, label_dir.name)] = recs
+            rescored_complete[(f.stem, label_dir.name)] = not stale and len(recs) == len(load_task(f.stem, label_split(label_dir))[2])
             vals = list(recs.values())
             n, total = len(vals), len(load_task(f.stem, label_split(label_dir))[2])
             oc = [outcome(r) for r in vals]
@@ -376,6 +422,16 @@ def cmd_report(a):
     print("|---|---|---|---|---|---|---|---|---|---|---|---|---|")
     for t, m, n, ex, lo, hi, fa, w, s, j, rf, ov, e, sec in sorted(rows):
         print(f"| {t} | {m} | {n} | {ex:.1%} | {lo:.0%}-{hi:.0%} | {fa:.1%} | {w} | {s} | {j} | {rf} | {ov} | {e} | {sec:.2f} |")
+    scores = {}
+    for (t, m), recs in by.items():
+        if not rescored_complete.get((t, m)):
+            continue
+        scores.setdefault(t, {})[m] = (sum(outcome(r) == "correct" for r in recs.values()), len(recs))
+    meta = {t: load_task(t)[1] for t in scores if (TASKS / t / "task.json").exists()}
+    notes = lifecycle_notes(scores, meta, datetime.now(timezone.utc).date())
+    if notes:
+        print("\nTask lifecycle (see README):\n")
+        print("\n".join(f"- {n}" for n in notes))
     if a.vs:
         print(f"\nPaired comparison against {a.vs} on items both answered (exact McNemar test):\n")
         print("| task | model | both correct | only model | only baseline | neither | p |")
