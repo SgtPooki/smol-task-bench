@@ -70,6 +70,7 @@ old = {"model": "m", "task_hashes": {"x": "1"}}
 assert bench.check_resumable(old, {"model": "m", "task_hashes": {"x": "1", "y": "2"}}) == []  # adding a task is fine
 assert bench.check_resumable(old, {"model": "m", "task_hashes": {"x": "9"}}) == ["x"]  # task data changed: rerun x
 assert bench.check_resumable(old, {"model": "other", "task_hashes": {"x": "1"}}) is None  # settings changed: refuse
+assert bench.check_resumable({**old, "scorer_version": 3}, {**old, "scorer_version": 4}) == []  # re-scored on report
 
 assert "tool-calling" not in bench.http_tasks() and "log-triage" in bench.http_tasks()
 

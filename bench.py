@@ -266,7 +266,8 @@ def read_records(path):
 
 def check_resumable(old, new):
     """A resumed run must use the same settings. -> task names whose data changed since their results were saved"""
-    strip = lambda c: {k: v for k, v in c.items() if k != "task_hashes"}
+    # scorer_version is recorded but doesn't block: the report re-scores saved raw answers with the current scorer
+    strip = lambda c: {k: v for k, v in c.items() if k not in ("task_hashes", "scorer_version")}
     if strip(old) != strip(new):
         return None
     return [n for n, h in new["task_hashes"].items() if old["task_hashes"].get(n, h) != h]
