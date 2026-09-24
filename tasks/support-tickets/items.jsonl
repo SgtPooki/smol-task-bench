@@ -1,30 +1,99 @@
-{"id": "ticket-01", "text": "Hi, I was charged twice for my March subscription. Can you refund the duplicate charge when you get a chance?", "expected": {"category": "billing", "urgent": false}}
-{"id": "ticket-02", "text": "Can I get an invoice with our company VAT number on it? Accounting needs it for last quarter.", "expected": {"category": "billing", "urgent": false}}
-{"id": "ticket-03", "text": "Your system charged my card $4,800 instead of $48. That is my rent money. Please reverse this TODAY.", "expected": {"category": "billing", "urgent": true}}
-{"id": "ticket-04", "text": "How do I switch from monthly to annual billing? I'd like the discount.", "expected": {"category": "billing", "urgent": false}}
-{"id": "ticket-05", "text": "Is there a student discount? I just started at university.", "expected": {"category": "billing", "urgent": false}}
-{"id": "ticket-06", "text": "Our payment failed and the dashboard says the account will be suspended in 2 hours. We have a launch tonight, please help.", "expected": {"category": "billing", "urgent": true}}
-{"id": "ticket-07", "text": "The dark mode toggle doesn't remember my setting after I log out. Minor, just FYI.", "expected": {"category": "bug", "urgent": false}}
-{"id": "ticket-08", "text": "Since this morning's update none of our users can save documents \u2014 every save throws 'Error 500'. Our whole team is blocked.", "expected": {"category": "bug", "urgent": true}}
-{"id": "ticket-09", "text": "Typo on the pricing page: 'Proffesional' should be 'Professional'.", "expected": {"category": "bug", "urgent": false}}
-{"id": "ticket-10", "text": "CSV export puts the date column in the wrong timezone. Workaround is fine for now.", "expected": {"category": "bug", "urgent": false}}
-{"id": "ticket-11", "text": "Data is being deleted! When two people edit the same record, one person's changes vanish completely. We've lost a day of work.", "expected": {"category": "bug", "urgent": true}}
-{"id": "ticket-12", "text": "The mobile app crashes when I rotate the screen on the settings page. Android 15, Pixel 8.", "expected": {"category": "bug", "urgent": false}}
-{"id": "ticket-13", "text": "Would love a keyboard shortcut to archive items. Would save me a lot of clicks.", "expected": {"category": "feature-request", "urgent": false}}
-{"id": "ticket-14", "text": "Any plans to support SSO with Okta? It would help us roll this out company-wide next year.", "expected": {"category": "feature-request", "urgent": false}}
-{"id": "ticket-15", "text": "Could you add a way to export reports as PDF?", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-60", "text": "Can we get a direct integration with example.net email services?", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-44", "text": "I'd like to cancel my subscription at the end of the current billing cycle.", "expected": {"category": "billing", "urgent": false}}
+{"id": "ticket-57", "text": "The background image doesn't scale properly on ultra-wide monitors.", "expected": {"category": "bug", "urgent": false}}
 {"id": "ticket-16", "text": "Please add Webhooks for when a task is completed so we can hook it into Slack.", "expected": {"category": "feature-request", "urgent": false}}
-{"id": "ticket-17", "text": "It would be nice if the calendar view could start the week on Monday.", "expected": {"category": "feature-request", "urgent": false}}
-{"id": "ticket-18", "text": "Suggestion: let us pin favorite projects to the top of the sidebar.", "expected": {"category": "feature-request", "urgent": false}}
-{"id": "ticket-19", "text": "I changed my email address and now I'm not sure which one to log in with. Can you check?", "expected": {"category": "account-access", "urgent": false}}
-{"id": "ticket-20", "text": "I'm locked out and our payroll runs in one hour \u2014 I'm the only admin. The 2FA codes aren't arriving.", "expected": {"category": "account-access", "urgent": true}}
-{"id": "ticket-21", "text": "How do I add a second admin to our workspace?", "expected": {"category": "account-access", "urgent": false}}
-{"id": "ticket-22", "text": "Someone changed my password and email without my permission. I think my account was hacked, please lock it now.", "expected": {"category": "account-access", "urgent": true}}
-{"id": "ticket-23", "text": "How do I turn on two-factor authentication for my account?", "expected": {"category": "account-access", "urgent": false}}
-{"id": "ticket-24", "text": "Can you delete my old account under my personal email? I only use the work one now.", "expected": {"category": "account-access", "urgent": false}}
-{"id": "ticket-25", "text": "My order #10442 says shipped but tracking hasn't updated in 3 days. Any news?", "expected": {"category": "shipping", "urgent": false}}
-{"id": "ticket-26", "text": "Can I change the delivery address on an order I placed an hour ago?", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-50", "text": "The pagination control is missing if there are exactly 10 items.", "expected": {"category": "bug", "urgent": false}}
+{"id": "ticket-100", "text": "Do you provide a return shipping label in the box?", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-43", "text": "How long are invoices kept in the billing history tab?", "expected": {"category": "billing", "urgent": false}}
+{"id": "ticket-02", "text": "Can I get an invoice with our company VAT number on it? Accounting needs it for last quarter.", "expected": {"category": "billing", "urgent": false}}
 {"id": "ticket-27", "text": "The replacement insulin cooler I ordered hasn't arrived and my medication will spoil tomorrow. Where is it?", "expected": {"category": "shipping", "urgent": true}}
+{"id": "ticket-38", "text": "A glitch in your system caused my card to be charged 50 times in the last hour, draining my entire bank account. Stop the charges and refund now!", "expected": {"category": "billing", "urgent": true}}
+{"id": "ticket-72", "text": "It would be useful if we could filter search results by date range.", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-11", "text": "Data is being deleted! When two people edit the same record, one person's changes vanish completely. We've lost a day of work.", "expected": {"category": "bug", "urgent": true}}
+{"id": "ticket-37", "text": "Could you change the billing email to accounting@example.com?", "expected": {"category": "billing", "urgent": false}}
+{"id": "ticket-68", "text": "I suggest adding an auto-save feature to the draft editor.", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-03", "text": "Your system charged my card $4,800 instead of $48. That is my rent money. Please reverse this TODAY.", "expected": {"category": "billing", "urgent": true}}
+{"id": "ticket-85", "text": "Can I see a list of all devices logged into my account?", "expected": {"category": "account-access", "urgent": false}}
+{"id": "ticket-41", "text": "Can I pay with PayPal instead of a credit card?", "expected": {"category": "billing", "urgent": false}}
+{"id": "ticket-91", "text": "Is it possible to upgrade to expedited shipping after the order is placed?", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-80", "text": "Can I merge two accounts that I accidentally created?", "expected": {"category": "account-access", "urgent": false}}
+{"id": "ticket-48", "text": "A zero-day exploit in your software is actively allowing anyone to bypass authentication on our server 198.51.100.44. Please patch this immediately!", "expected": {"category": "bug", "urgent": true}}
+{"id": "ticket-87", "text": "The replacement parts for our server farm were supposed to arrive this morning. Our main cluster is offline until they arrive, please track them down now!", "expected": {"category": "shipping", "urgent": true}}
+{"id": "ticket-35", "text": "We were billed $10,000 instead of $100 and it has overdrawn our payroll account. The bank is bouncing checks today, please reverse this immediately!", "expected": {"category": "billing", "urgent": true}}
+{"id": "ticket-58", "text": "I get a 404 error when I click the 'Terms of Service' link in the footer.", "expected": {"category": "bug", "urgent": false}}
+{"id": "ticket-52", "text": "When I hover over the tooltips, the text is slightly cut off at the bottom.", "expected": {"category": "bug", "urgent": false}}
+{"id": "ticket-30", "text": "Wrong item delivered for our wedding tomorrow — we got 12 chairs instead of 120. We need the rest urgently.", "expected": {"category": "shipping", "urgent": true}}
+{"id": "ticket-81", "text": "I'd like to transfer ownership of this workspace to another user.", "expected": {"category": "account-access", "urgent": false}}
+{"id": "ticket-53", "text": "The search bar loses focus after typing the first character.", "expected": {"category": "bug", "urgent": false}}
+{"id": "ticket-45", "text": "The production database at db1.example.com was wiped out by your latest update script and the backup is inaccessible! We are losing thousands of transactions per minute!", "expected": {"category": "bug", "urgent": true}}
+{"id": "ticket-20", "text": "I'm locked out and our payroll runs in one hour — I'm the only admin. The 2FA codes aren't arriving.", "expected": {"category": "account-access", "urgent": true}}
+{"id": "ticket-89", "text": "The tracking page says 'delivered' but it was left at my neighbor's house. I got it, just a heads up.", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-33", "text": "Is there a non-profit discount available for charities?", "expected": {"category": "billing", "urgent": false}}
+{"id": "ticket-90", "text": "The live tissue samples we ordered are delayed in transit and will expire in 4 hours if not delivered! This is critical medical research, where is the package?!", "expected": {"category": "shipping", "urgent": true}}
+{"id": "ticket-47", "text": "Sometimes the dropdown menu takes 2-3 seconds to load on the reports page.", "expected": {"category": "bug", "urgent": false}}
 {"id": "ticket-28", "text": "Do you ship to Canada? I didn't see it in the country list.", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-92", "text": "The outer packaging was slightly ripped, but the book inside is fine.", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-79", "text": "We are locked out of the main admin account for nas01 and our entire manufacturing plant is halted until we can get back in. We are losing millions per hour!", "expected": {"category": "account-access", "urgent": true}}
+{"id": "ticket-49", "text": "The typo 'sucess' appears after saving a new contact.", "expected": {"category": "bug", "urgent": false}}
+{"id": "ticket-08", "text": "Since this morning's update none of our users can save documents — every save throws 'Error 500'. Our whole team is blocked.", "expected": {"category": "bug", "urgent": true}}
+{"id": "ticket-65", "text": "We need a temporary override feature for the regional block today. Our CEO is stranded in a blocked region and needs a way to bypass it to approve payroll in the next 2 hours!", "expected": {"category": "feature-request", "urgent": true}}
+{"id": "ticket-05", "text": "Is there a student discount? I just started at university.", "expected": {"category": "billing", "urgent": false}}
+{"id": "ticket-10", "text": "CSV export puts the date column in the wrong timezone. Workaround is fine for now.", "expected": {"category": "bug", "urgent": false}}
+{"id": "ticket-55", "text": "If I click 'refresh' too fast, it shows a generic error message.", "expected": {"category": "bug", "urgent": false}}
+{"id": "ticket-40", "text": "I noticed a $2 discrepancy on my last invoice. Not a big deal, but why?", "expected": {"category": "billing", "urgent": false}}
+{"id": "ticket-26", "text": "Can I change the delivery address on an order I placed an hour ago?", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-69", "text": "Please consider adding an option to sort the table by file size.", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-64", "text": "Is there any way to add an undo function for text editing?", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-86", "text": "I want to permanently delete my account and all associated data.", "expected": {"category": "account-access", "urgent": false}}
+{"id": "ticket-88", "text": "Can you confirm if you ship to PO boxes?", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-07", "text": "The dark mode toggle doesn't remember my setting after I log out. Minor, just FYI.", "expected": {"category": "bug", "urgent": false}}
+{"id": "ticket-96", "text": "My order hasn't shipped yet, it's been about 2 days. No big rush.", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-95", "text": "How do I return an item that doesn't fit?", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-93", "text": "Our event starts in 6 hours and the shipment of 500 badges never arrived. We need an emergency courier delivery immediately or the conference is ruined!", "expected": {"category": "shipping", "urgent": true}}
+{"id": "ticket-82", "text": "Hackers have taken over our main corporate account and are holding our data for ransom! Please restore our access and lock out the attackers!", "expected": {"category": "account-access", "urgent": true}}
+{"id": "ticket-06", "text": "Our payment failed and the dashboard says the account will be suspended in 2 hours. We have a launch tonight, please help.", "expected": {"category": "billing", "urgent": true}}
+{"id": "ticket-51", "text": "All of our customers are getting an 'Internal Server Error' when trying to check out. Our store is completely down!", "expected": {"category": "bug", "urgent": true}}
+{"id": "ticket-23", "text": "How do I turn on two-factor authentication for my account?", "expected": {"category": "account-access", "urgent": false}}
+{"id": "ticket-14", "text": "Any plans to support SSO with Okta? It would help us roll this out company-wide next year.", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-74", "text": "I forgot my username, I think it was something like alice or bob.", "expected": {"category": "account-access", "urgent": false}}
+{"id": "ticket-36", "text": "I need to upgrade from the starter plan to the pro plan. Will it prorate?", "expected": {"category": "billing", "urgent": false}}
+{"id": "ticket-46", "text": "The 'cancel' button on the profile page is slightly misaligned on Safari.", "expected": {"category": "bug", "urgent": false}}
+{"id": "ticket-22", "text": "Someone changed my password and email without my permission. I think my account was hacked, please lock it now.", "expected": {"category": "account-access", "urgent": true}}
+{"id": "ticket-62", "text": "Please add a manual override switch to the rate limiter module immediately! Our national broadcast from 203.0.113.10 just started and we are being blocked by the default rules!", "expected": {"category": "feature-request", "urgent": true}}
+{"id": "ticket-71", "text": "Can we have a dedicated tab for archived projects?", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-83", "text": "I didn't receive the email verification link, can you resend it?", "expected": {"category": "account-access", "urgent": false}}
+{"id": "ticket-76", "text": "Someone is sending phishing emails from my account! I cannot log in to stop it, please lock my account immediately before my reputation is ruined!", "expected": {"category": "account-access", "urgent": true}}
+{"id": "ticket-75", "text": "Can you change my display name to just my first name?", "expected": {"category": "account-access", "urgent": false}}
+{"id": "ticket-61", "text": "I would love it if the app supported custom color themes.", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-09", "text": "Typo on the pricing page: 'Proffesional' should be 'Professional'.", "expected": {"category": "bug", "urgent": false}}
+{"id": "ticket-94", "text": "Do you offer international shipping to Europe?", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-32", "text": "Where can I find the tax ID for example.org on my receipt?", "expected": {"category": "billing", "urgent": false}}
+{"id": "ticket-04", "text": "How do I switch from monthly to annual billing? I'd like the discount.", "expected": {"category": "billing", "urgent": false}}
+{"id": "ticket-17", "text": "It would be nice if the calendar view could start the week on Monday.", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-66", "text": "It would be great to have a native Mac app instead of just the web version.", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-99", "text": "Can you combine my two separate orders into one shipment?", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-59", "text": "We must have an emergency compliance export feature enabled for our account by 5 PM today to comply with a court order, or our executives will be held in contempt!", "expected": {"category": "feature-request", "urgent": true}}
+{"id": "ticket-01", "text": "Hi, I was charged twice for my March subscription. Can you refund the duplicate charge when you get a chance?", "expected": {"category": "billing", "urgent": false}}
+{"id": "ticket-73", "text": "A former employee who was fired today still has access to our system from 192.0.2.100 and is actively deleting customer files! Revoke their access now!", "expected": {"category": "account-access", "urgent": true}}
+{"id": "ticket-15", "text": "Could you add a way to export reports as PDF?", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-77", "text": "How do I change my security questions? I forgot the answers.", "expected": {"category": "account-access", "urgent": false}}
+{"id": "ticket-98", "text": "I received the wrong color shirt, how do I exchange it?", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-63", "text": "Please add a button to duplicate an existing template.", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-13", "text": "Would love a keyboard shortcut to archive items. Would save me a lot of clicks.", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-54", "text": "Your desktop client is crashing on startup and deleting local user files without prompting. Multiple users have reported lost work just today!", "expected": {"category": "bug", "urgent": true}}
+{"id": "ticket-12", "text": "The mobile app crashes when I rotate the screen on the settings page. Android 15, Pixel 8.", "expected": {"category": "bug", "urgent": false}}
+{"id": "ticket-18", "text": "Suggestion: let us pin favorite projects to the top of the sidebar.", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-84", "text": "How do I enable biometric login on the mobile app?", "expected": {"category": "account-access", "urgent": false}}
+{"id": "ticket-78", "text": "My 2FA token is out of sync, but I can use my backup codes for now.", "expected": {"category": "account-access", "urgent": false}}
+{"id": "ticket-25", "text": "My order #10442 says shipped but tracking hasn't updated in 3 days. Any news?", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-31", "text": "Our enterprise account is suspended for non-payment but our wire transfer cleared last week. We have a major presentation in 3 hours and cannot access our data!", "expected": {"category": "billing", "urgent": true}}
+{"id": "ticket-56", "text": "When I sort the table by date, the results are completely randomized instead of chronological.", "expected": {"category": "bug", "urgent": false}}
+{"id": "ticket-97", "text": "Can I add a delivery note to leave the package on the back porch?", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-70", "text": "Would it be possible to add a built-in calendar view for tasks?", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-39", "text": "Do you accept wire transfers for annual plans?", "expected": {"category": "billing", "urgent": false}}
+{"id": "ticket-34", "text": "My credit card expires next month. How do I update it in the portal?", "expected": {"category": "billing", "urgent": false}}
 {"id": "ticket-29", "text": "Package arrived with a dented box but the item inside seems fine. Just letting you know.", "expected": {"category": "shipping", "urgent": false}}
-{"id": "ticket-30", "text": "Wrong item delivered for our wedding tomorrow \u2014 we got 12 chairs instead of 120. We need the rest urgently.", "expected": {"category": "shipping", "urgent": true}}
+{"id": "ticket-24", "text": "Can you delete my old account under my personal email? I only use the work one now.", "expected": {"category": "account-access", "urgent": false}}
+{"id": "ticket-21", "text": "How do I add a second admin to our workspace?", "expected": {"category": "account-access", "urgent": false}}
+{"id": "ticket-67", "text": "Could you add support for Markdown in the comments section?", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-19", "text": "I changed my email address and now I'm not sure which one to log in with. Can you check?", "expected": {"category": "account-access", "urgent": false}}

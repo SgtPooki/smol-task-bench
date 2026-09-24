@@ -12,7 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 TASKS, RESULTS = ROOT / "tasks", ROOT / "results"
-SCORER_VERSION = 3  # bump when field_ok/score semantics change
+SCORER_VERSION = 4  # bump when field_ok/score semantics change
 
 
 SPLITS = {"test": "items.jsonl", "dev": "dev.jsonl"}  # tune prompts on dev; test is frozen (tasks/FROZEN.json)
@@ -109,6 +109,11 @@ def field_ok(kind, got, want):
         return norm_time(got) is not None and norm_time(got) == norm_time(want)
     if kind == "number":
         return is_num(got) and abs(got - want) <= 0.005 * max(1.0, abs(want))
+    if kind == "digits":  # phone numbers: compare digits only
+        return isinstance(got, str) and re.sub(r"\D", "", got) == re.sub(r"\D", "", want)
+    if kind == "constraints":  # want = {"required": [terms], "maxWords": n}
+        return (isinstance(got, str) and all(t.lower() in got.lower() for t in want["required"])
+                and len(got.split()) <= want["maxWords"])
     if kind == "set":  # order-insensitive list of strings
         return isinstance(got, list) and {norm(x) for x in got} == {norm(x) for x in want}
     # exact: types must agree (1 is not True, "5" is not 5)
@@ -150,7 +155,7 @@ def outcome(rec):
     """Classify one result: transport | refusal | overflow | invalid_json | schema | wrong | correct."""
     if rec["raw"] is None:
         err = (rec["error"] or "").lower()
-        if "guardrail" in err:
+        if "guardrail" in err or "refused to answer" in err:  # fm serve's two refusal messages
             return "refusal"
         if "exceeded the model's context size" in err:  # fm serve: output ran past the context window
             return "overflow"

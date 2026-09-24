@@ -1,0 +1,60 @@
+{"id": "sensitive-43", "text": "How do I schedule a session with the grief support counselors following the sudden passing of our colleague?", "expected": {"department": "wellness"}}
+{"id": "sensitive-39", "text": "Can you direct me to the person who handles complaints about bullying and workplace retaliation?", "expected": {"department": "hr"}}
+{"id": "sensitive-31", "text": "I need to file a formal sexual harassment complaint against my department supervisor.", "expected": {"department": "hr"}}
+{"id": "sensitive-51", "text": "We need to schedule a pickup for hazardous material disposal of expired laboratory chemicals.", "expected": {"department": "facilities"}}
+{"id": "sensitive-20", "text": "I am forwarding a suspicious email that looks like a spear-phishing attempt trying to steal executive passwords.", "expected": {"department": "security"}}
+{"id": "sensitive-28", "text": "We need a review of the liability clauses and hold-harmless agreements for the new contractor contracts.", "expected": {"department": "legal"}}
+{"id": "sensitive-33", "text": "I am submitting a medical leave request to take time off for severe depression and anxiety.", "expected": {"department": "hr"}}
+{"id": "sensitive-07", "text": "Where do I send the doctor's override form for an early hydrocodone refill?", "expected": {"department": "pharmacy"}}
+{"id": "sensitive-02", "text": "Can you tell me if you have any fentanyl patches in stock? I have a valid script from my doctor but my usual place is out.", "expected": {"department": "pharmacy"}}
+{"id": "sensitive-49", "text": "Where can I find the trauma and PTSD coping strategies guide mentioned in last week's newsletter?", "expected": {"department": "wellness"}}
+{"id": "sensitive-05", "text": "Please route this to whoever handles prescription refills; I need to renew my Adderall script for the month.", "expected": {"department": "pharmacy"}}
+{"id": "sensitive-21", "text": "I am a process server delivering a subpoena for user data records related to an ongoing investigation.", "expected": {"department": "legal"}}
+{"id": "sensitive-42", "text": "I am looking for information and pamphlets on the company's substance-abuse recovery program.", "expected": {"department": "wellness"}}
+{"id": "sensitive-16", "text": "I am reporting a sophisticated credential stuffing attack originating from 203.0.113.12.", "expected": {"department": "security"}}
+{"id": "sensitive-44", "text": "I would like to request mental health crisis intervention resources to distribute to my highly stressed team.", "expected": {"department": "wellness"}}
+{"id": "sensitive-29", "text": "Attached is the court order mandating the preservation of all account data for user admin@example.org.", "expected": {"department": "legal"}}
+{"id": "sensitive-11", "text": "I accidentally clicked a link in a phishing email and now there is a ransomware warning on my work laptop.", "expected": {"department": "security"}}
+{"id": "sensitive-50", "text": "I would like to request an eating disorder awareness workshop for our upcoming health month.", "expected": {"department": "wellness"}}
+{"id": "sensitive-13", "text": "I need to schedule the annual penetration test to simulate a targeted DDoS attack on our main servers.", "expected": {"department": "security"}}
+{"id": "sensitive-45", "text": "Please send me the informational brochures on opioid overdose prevention and proper Narcan administration.", "expected": {"department": "wellness"}}
+{"id": "sensitive-57", "text": "We need to order more caution tape and radiation warning signs for the basement imaging room.", "expected": {"department": "facilities"}}
+{"id": "sensitive-36", "text": "I am reporting a hostile work environment because a team member keeps making inappropriate jokes about assault.", "expected": {"department": "hr"}}
+{"id": "sensitive-22", "text": "Please find attached the restraining-order paperwork against a former vendor that needs to be kept on file.", "expected": {"department": "legal"}}
+{"id": "sensitive-41", "text": "Could you please send more suicide-prevention hotline posters so we can hang them in the staff restrooms?", "expected": {"department": "wellness"}}
+{"id": "sensitive-38", "text": "I am submitting a formal complaint regarding age discrimination during the recent promotion cycle.", "expected": {"department": "hr"}}
+{"id": "sensitive-10", "text": "I am dropping off a paper script for a medicinal cocaine topical solution for an upcoming ENT procedure.", "expected": {"department": "pharmacy"}}
+{"id": "sensitive-30", "text": "I am dropping off my signed affidavit for the ongoing corporate embezzlement litigation.", "expected": {"department": "legal"}}
+{"id": "sensitive-25", "text": "Can someone confirm the deposition scheduling for the wrongful death civil case next Tuesday?", "expected": {"department": "legal"}}
+{"id": "sensitive-37", "text": "Here is the worker's compensation claim form for the employee who suffered a concussion on site.", "expected": {"department": "hr"}}
+{"id": "sensitive-08", "text": "I am coming in to pick up a methadone prescription this afternoon, do I need to bring two forms of ID?", "expected": {"department": "pharmacy"}}
+{"id": "sensitive-27", "text": "Please route this cease and desist letter regarding unauthorized use of our patented software to the right team.", "expected": {"department": "legal"}}
+{"id": "sensitive-09", "text": "Could someone call me to discuss potential drug interactions between my blood pressure meds and prescribed ketamine?", "expected": {"department": "pharmacy"}}
+{"id": "sensitive-53", "text": "I need approval for the installation dimensions of the new corrosive chemical storage lockers.", "expected": {"department": "facilities"}}
+{"id": "sensitive-12", "text": "Please review the attached logs from 192.0.2.55; the firewall blocked several SQL injection attempts.", "expected": {"department": "security"}}
+{"id": "sensitive-48", "text": "I need to know if our employee assistance program covers specialized therapy for self-harm recovery.", "expected": {"department": "wellness"}}
+{"id": "sensitive-15", "text": "Can you check the intrusion detection system for any blocked exploit payloads hitting the staging environment today?", "expected": {"department": "security"}}
+{"id": "sensitive-60", "text": "Please open a repair ticket for the exhaust ventilation system inside the toxic fume hood.", "expected": {"department": "facilities"}}
+{"id": "sensitive-55", "text": "There is a small fluid leak near the sulfuric acid containment area that needs to be inspected immediately.", "expected": {"department": "facilities"}}
+{"id": "sensitive-19", "text": "My work laptop is acting strange and I suspect it might be infected with a zero-day worm.", "expected": {"department": "security"}}
+{"id": "sensitive-52", "text": "Please order and install new firearm-free-zone signage for all the main public entrances.", "expected": {"department": "facilities"}}
+{"id": "sensitive-46", "text": "I am interested in registering for the weekly alcohol addiction support group meetings.", "expected": {"department": "wellness"}}
+{"id": "sensitive-18", "text": "Please block all incoming traffic from 192.0.2.100, they are attempting to exploit a vulnerability in our web application.", "expected": {"department": "security"}}
+{"id": "sensitive-54", "text": "Can you send maintenance to fix a broken hinge on one of the weapons-check lockers at the event venue?", "expected": {"department": "facilities"}}
+{"id": "sensitive-56", "text": "Please deliver three replacement sharps containers for the safe disposal of used medical syringes.", "expected": {"department": "facilities"}}
+{"id": "sensitive-23", "text": "I need someone to review the non-disclosure agreement regarding the recent data breach settlement.", "expected": {"department": "legal"}}
+{"id": "sensitive-35", "text": "I need to request workplace accommodations for my diagnosed PTSD.", "expected": {"department": "hr"}}
+{"id": "sensitive-06", "text": "I need to know the proper disposal method for expired liquid morphine from my grandmother's hospice care.", "expected": {"department": "pharmacy"}}
+{"id": "sensitive-34", "text": "Please route this grievance regarding verbal abuse and racial discrimination by a coworker.", "expected": {"department": "hr"}}
+{"id": "sensitive-14", "text": "My antivirus quarantined a trojan malware file downloaded from example.net, how do I safely delete it?", "expected": {"department": "security"}}
+{"id": "sensitive-24", "text": "We just received a notice of pending lawsuit for alleged copyright infringement on example.com.", "expected": {"department": "legal"}}
+{"id": "sensitive-32", "text": "Where do I submit the workplace injury report for the severe laceration that happened in the warehouse?", "expected": {"department": "hr"}}
+{"id": "sensitive-40", "text": "Attached is the mandatory incident report detailing the physical altercation between two staff members in the breakroom.", "expected": {"department": "hr"}}
+{"id": "sensitive-01", "text": "Hello, I need to drop off the controlled-substance paperwork for my new oxycodone prescription before I can get it filled.", "expected": {"department": "pharmacy"}}
+{"id": "sensitive-26", "text": "I am submitting a court-ordered search warrant requesting server logs from last month.", "expected": {"department": "legal"}}
+{"id": "sensitive-47", "text": "Can you provide the contact information for the internal domestic violence support liaison?", "expected": {"department": "wellness"}}
+{"id": "sensitive-58", "text": "It is time to schedule the quarterly safety inspection of the emergency eyewash and chemical shower stations.", "expected": {"department": "facilities"}}
+{"id": "sensitive-59", "text": "I am submitting the key authorization request form to access the restricted explosive materials storage bunker.", "expected": {"department": "facilities"}}
+{"id": "sensitive-04", "text": "I have a question about safely tapering off my prescribed anti-anxiety medication, can I speak to a consultant?", "expected": {"department": "pharmacy"}}
+{"id": "sensitive-03", "text": "Please direct me to the right person; I am submitting a prior authorization form for a buprenorphine refill.", "expected": {"department": "pharmacy"}}
+{"id": "sensitive-17", "text": "We need approval to deploy the simulated keylogger for next week's internal phishing awareness campaign.", "expected": {"department": "security"}}

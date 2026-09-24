@@ -1,0 +1,36 @@
+{
+  "name": "contact",
+  "description": "Generated email bodies with the sender's signature, plus distractor phone lines and cc'd colleagues (scripts/make_contacts.py). Labels are exact by construction.",
+  "instructions": "You extract the sender's contact details from an email. name is the sender's full name as written in the signature. email is the sender's email address. phone is the sender's own direct, mobile, or cell number as digits only with no country code (for example '(415) 555-0142' is 4155550142); ignore main office, front desk, and fax lines. company is the sender's company name as written. Ignore contact details of anyone cc'd.",
+  "prompt": "Email:\n{text}",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string"
+      },
+      "phone": {
+        "type": "string"
+      },
+      "company": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "name",
+      "email",
+      "phone",
+      "company"
+    ],
+    "additionalProperties": false
+  },
+  "fields": {
+    "name": "exact",
+    "email": "exact",
+    "phone": "digits",
+    "company": "exact"
+  }
+}

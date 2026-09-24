@@ -19,6 +19,13 @@ assert f("time", "09:00:00", "09:00") and f("time", "9:00", "09:00") and not f("
 assert not f("time", "nine", "09:00") and not f("time", None, "09:00")
 # set
 assert f("set", ["b", "A"], ["a", "b"]) and not f("set", ["a"], ["a", "b"])
+# digits: formatting ignored
+assert f("digits", "(415) 555-0142", "4155550142") and not f("digits", "415 555 0143", "4155550142")
+# constraints: every required term (case-insensitive) and a word limit
+c = {"required": ["A-10442", "October 6"], "maxWords": 8}
+assert f("constraints", "Order a-10442 ships October 6.", c)
+assert not f("constraints", "Order A-10442 ships soon.", c)
+assert not f("constraints", "Your order A-10442 will definitely ship on October 6, sorry.", c)
 
 schema = {"type": "object", "properties": {"s": {"type": "string", "enum": ["a", "b"]}, "n": {"type": "integer"}},
           "required": ["s", "n"], "additionalProperties": False}
@@ -37,6 +44,7 @@ assert bench.outcome(rec("not json")) == "invalid_json"
 assert bench.outcome(rec('```json\n{"s": "a", "n": 1}\n```')) == "correct"
 assert bench.outcome(rec('Sure! {"s": "a", "n": 1}')) == "invalid_json"
 assert bench.outcome(rec(None, "HTTP 500: The model's safety guardrails were triggered.")) == "refusal"
+assert bench.outcome(rec(None, 'HTTP 500: {"error":{"message":"The model refused to answer."}}')) == "refusal"
 assert bench.outcome(rec(None, "TimeoutError()")) == "transport"
 assert bench.outcome(rec(None, "HTTP 500: The session's transcript exceeded the model's context size.")) == "overflow"
 
@@ -77,7 +85,8 @@ for d, split in [(d, s) for d in bench.TASKS.iterdir() if (d / "task.json").exis
     assert len({i["id"] for i in items}) == len(items), (d.name, split, "duplicate ids")
     for it in items:
         assert set(it["expected"]) == set(t["fields"]), (d.name, it["id"])
-        assert bench.schema_errors(t["schema"], it["expected"]) == [], (d.name, it["id"])
+        checked = {k: v for k, v in it["expected"].items() if t["fields"][k] != "constraints"}  # constraints aren't answers
+        assert bench.schema_errors({**t["schema"], "required": list(checked)}, checked) == [], (d.name, it["id"])
         assert "image" not in it or (d / it["image"]).exists(), (d.name, it["id"])
 
 print("ok")

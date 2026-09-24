@@ -1,0 +1,38 @@
+{
+  "name": "bookmark",
+  "description": "Saved bookmarks tagged with 1 to 3 tags from a fixed vocabulary. Written by Gemini 3.1 Pro and kept only where gpt-6-astra's blind tag set matched.",
+  "instructions": "You tag saved bookmarks. tags is a list of 1 to 3 tags from: linux, networking, security, storage, containers, databases, monitoring, programming, hardware, home-automation, media, backup. Assign a tag only when it is a primary topic of the bookmark; do not tag passing mentions.",
+  "prompt": "{text}",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "tags": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "linux",
+            "networking",
+            "security",
+            "storage",
+            "containers",
+            "databases",
+            "monitoring",
+            "programming",
+            "hardware",
+            "home-automation",
+            "media",
+            "backup"
+          ]
+        }
+      }
+    },
+    "required": [
+      "tags"
+    ],
+    "additionalProperties": false
+  },
+  "fields": {
+    "tags": "set"
+  }
+}

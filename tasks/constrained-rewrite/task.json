@@ -1,0 +1,21 @@
+{
+  "name": "rewrite",
+  "description": "Rude or rambling customer-service drafts rewritten under checkable constraints: keep every required term and stay within a word limit. Written by Gemini 3.1 Pro; every item was shown feasible by a gpt-6-astra rewrite that met its constraints.",
+  "instructions": "You rewrite customer-service draft replies to be polite and concise. text is the rewritten reply. It must include every term listed as required exactly as written, and must not exceed the word limit.",
+  "prompt": "{text}",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "text": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "text"
+    ],
+    "additionalProperties": false
+  },
+  "fields": {
+    "text": "constraints"
+  }
+}
