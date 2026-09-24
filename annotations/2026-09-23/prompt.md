@@ -13,11 +13,11 @@ Output all 90 lines, in order, then stop.
 Fields: service, severity
 Guidelines: You triage single homelab log lines. service is the name of the program that emitted the line exactly as it appears (the syslog tag before [pid] or ':', e.g. 'sshd', 'kernel', 'CRON'; for nginx access or error log format, 'nginx'; for PostgreSQL log format, 'postgres'). severity is one of: info (routine, normal operation), warn (degraded or unusual but still working; worth watching), error (an operation failed; partial breakage), critical (hardware failure, data-loss risk, or a service is down).
 
-[log-01] Sep 23 08:14:02 nas01 sshd[2211]: Accepted publickey for russ from 10.0.0.12 port 51234 ssh2: ED25519 SHA256:k3j...
+[log-01] Sep 23 08:14:02 nas01 sshd[2211]: Accepted publickey for alice from 192.0.2.12 port 51234 ssh2: ED25519 SHA256:k3j...
 [log-02] Sep 23 08:15:10 pve1 systemd[1]: Started Daily apt download activities.
 [log-03] Sep 23 03:00:01 nas01 CRON[8812]: (root) CMD (/usr/local/bin/zfs-auto-snapshot --quiet --label=daily)
-[log-04] Sep 23 09:02:44 router dhcpd[912]: DHCPACK on 10.0.0.57 to 3c:22:fb:11:08:9a (livingroom-tv) via br0
-[log-05] 10.0.0.12 - - [23/Sep/2026:09:12:01 +0000] "GET /api/health HTTP/1.1" 200 17 "-" "Uptime-Kuma/1.23"
+[log-04] Sep 23 09:02:44 router dhcpd[912]: DHCPACK on 192.0.2.57 to 02:00:5e:10:00:9a (livingroom-tv) via br0
+[log-05] 192.0.2.12 - - [23/Sep/2026:09:12:01 +0000] "GET /api/health HTTP/1.1" 200 17 "-" "Uptime-Kuma/1.23"
 [log-06] 2026-09-23 02:00:03.120 UTC [4410] LOG:  checkpoint complete: wrote 1842 buffers (11.2%); 0 WAL file(s) added, 0 removed, 1 recycled
 [log-07] Sep 23 07:30:12 docker01 dockerd[1022]: time="2026-09-23T07:30:12Z" level=info msg="Container 4f2a1c started" image=jellyfin/jellyfin:10.10
 [log-08] Sep 23 06:00:00 nas01 smartd[733]: Device: /dev/sda [SAT], SMART Usage Attribute: 194 Temperature_Celsius changed from 34 to 35
@@ -28,8 +28,8 @@ Guidelines: You triage single homelab log lines. service is the name of the prog
 [log-13] Sep 23 12:01:40 docker01 dockerd[1022]: time="2026-09-23T12:01:40Z" level=warning msg="Health check for container 7bd1e0 failed 1 of 3 times"
 [log-14] Sep 23 04:12:09 nas01 netdata[1502]: WARNING: disk space usage for /mnt/tank is 86% (threshold 85%)
 [log-15] Sep 23 00:00:04 web01 certbot[3310]: Certificate for home.example.net expires in 9 days; renewal attempt scheduled
-[log-16] 2026/09/23 10:14:02 [error] 311#311: *9120 upstream timed out (110: Connection timed out) while reading response header from upstream, client: 10.0.0.7, server: jellyfin.lan, upstream: "http://10.0.0.20:8096/"
-[log-17] Sep 23 02:30:01 nas01 CRON[9921]: (russ) MAIL (mailed 212 bytes of output but got status 0x004b from MTA)
+[log-16] 2026/09/23 10:14:02 [error] 311#311: *9120 upstream timed out (110: Connection timed out) while reading response header from upstream, client: 192.0.2.7, server: jellyfin.lan, upstream: "http://192.0.2.20:8096/"
+[log-17] Sep 23 02:30:01 nas01 CRON[9921]: (alice) MAIL (mailed 212 bytes of output but got status 0x004b from MTA)
 [log-18] 2026-09-23 11:20:31.771 UTC [6021] ERROR:  duplicate key value violates unique constraint "users_email_key"
 [log-19] Sep 23 07:45:03 docker01 systemd[1]: restic-backup.service: Main process exited, code=exited, status=1/FAILURE
 [log-20] Sep 23 13:10:02 docker01 dockerd[1022]: time="2026-09-23T13:10:02Z" level=error msg="Handler for POST /v1.45/containers/create returned error: pull access denied for ghcr.io/acme/private-app"

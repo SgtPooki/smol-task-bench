@@ -1,0 +1,42 @@
+{
+  "name": "receipt",
+  "description": "Generated receipts in USD, EUR, GBP, and JPY formats, rendered with headless Chromium (scripts/make_synthetic_receipts.py). Labels are exact by construction.",
+  "instructions": "You extract data from receipt photos. total is the final amount due as a plain number with no currency symbol or thousands separators, using a decimal point for cents (for example '1.234,50 \u20ac' is 1234.5 and '\u00a53,700' is 3700). currency is the ISO 4217 code: USD, EUR, GBP, or JPY. date is the purchase date as YYYY-MM-DD. itemCount is the number of lines in the itemized purchase list: count every line that names a product or add-on, including zero-price lines and repeated products; do not count subtotal, discount, tax, tip, payment, or change lines, and ignore any item count printed on the receipt.",
+  "prompt": "Extract the total, currency, date, and item count from this receipt.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "total": {
+        "type": "number"
+      },
+      "currency": {
+        "type": "string",
+        "enum": [
+          "USD",
+          "EUR",
+          "GBP",
+          "JPY"
+        ]
+      },
+      "date": {
+        "type": "string"
+      },
+      "itemCount": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "total",
+      "currency",
+      "date",
+      "itemCount"
+    ],
+    "additionalProperties": false
+  },
+  "fields": {
+    "total": "exact",
+    "currency": "exact",
+    "date": "exact",
+    "itemCount": "exact"
+  }
+}

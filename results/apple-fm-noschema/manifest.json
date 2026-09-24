@@ -7,12 +7,13 @@
     "scorer_version": 3,
     "task_hashes": {
       "event-extraction": "1a7c6adc8c075cdf3521724f32b71293cb7311b71ce7d1ac487b5f936ea6786a",
-      "log-triage": "49844eb71624b58a5d78f6b96a3088f9444ba8d60b1ff6fcdd514588ca2b4949",
-      "receipts": "a4d0bddb9c00e2074336a24fd70aef92a685f2b57af35aabe822aa63e789061f",
-      "support-tickets": "27d7e0a7b44205a43fb6434cc18880776fef061137dc822cdaec7991453b9692"
+      "log-triage": "43b992d62ce0d00054ebc329a561565d24d14938af779491298c3276302ee908",
+      "receipts": "888bffcaf0880007512d421f7d7bf5413f85b9f0260314bb4160abfb3b15a9e9",
+      "support-tickets": "27d7e0a7b44205a43fb6434cc18880776fef061137dc822cdaec7991453b9692",
+      "receipts-synthetic": "6811bf58902d5ed5e50f9ea1e0906416c3d257e94faa9b6a00cfeb3fe9615dd7"
     }
   },
-  "created": "2026-09-23T21:51:36+00:00",
+  "created": "2026-09-24T01:24:14+00:00",
   "host": {
     "platform": "macOS-27.0-arm64-arm-64bit-Mach-O",
     "macos": "27.0",
@@ -24,16 +25,11 @@
     "python": "3.14.7"
   },
   "server": {
-    "models": {
-      "data": [
-        {
-          "created": 1790200296,
-          "object": "model",
-          "id": "system",
-          "owned_by": "Apple"
-        }
-      ],
-      "object": "list"
+    "model": {
+      "id": "system",
+      "object": "model",
+      "created": 1790213054,
+      "owned_by": "Apple"
     }
   }
 }

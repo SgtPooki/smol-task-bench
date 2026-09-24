@@ -1,0 +1,90 @@
+{"id":"log-01","service":"sshd","severity":"info","ambiguous":false,"note":""}
+{"id":"log-02","service":"systemd","severity":"info","ambiguous":false,"note":""}
+{"id":"log-03","service":"CRON","severity":"info","ambiguous":false,"note":""}
+{"id":"log-04","service":"dhcpd","severity":"info","ambiguous":false,"note":""}
+{"id":"log-05","service":"nginx","severity":"info","ambiguous":false,"note":""}
+{"id":"log-06","service":"postgres","severity":"info","ambiguous":false,"note":""}
+{"id":"log-07","service":"dockerd","severity":"info","ambiguous":false,"note":""}
+{"id":"log-08","service":"smartd","severity":"info","ambiguous":false,"note":""}
+{"id":"log-09","service":"smartd","severity":"critical","ambiguous":true,"note":"severity: pending unreadable sectors indicate data-loss risk, but could be read as warn while the disk remains operational."}
+{"id":"log-10","service":"kernel","severity":"warn","ambiguous":false,"note":""}
+{"id":"log-11","service":"postgres","severity":"warn","ambiguous":false,"note":""}
+{"id":"log-12","service":"nginx","severity":"warn","ambiguous":false,"note":""}
+{"id":"log-13","service":"dockerd","severity":"warn","ambiguous":true,"note":"severity: one failed health check could be error as a failed operation, although the container is not declared unhealthy."}
+{"id":"log-14","service":"netdata","severity":"warn","ambiguous":false,"note":""}
+{"id":"log-15","service":"certbot","severity":"warn","ambiguous":true,"note":"severity: scheduled renewal before expiration could be routine info."}
+{"id":"log-16","service":"nginx","severity":"error","ambiguous":false,"note":""}
+{"id":"log-17","service":"CRON","severity":"error","ambiguous":false,"note":""}
+{"id":"log-18","service":"postgres","severity":"error","ambiguous":false,"note":""}
+{"id":"log-19","service":"systemd","severity":"error","ambiguous":true,"note":"severity: a failed backup job is error, but an exited service could be read as critical because it is down."}
+{"id":"log-20","service":"dockerd","severity":"error","ambiguous":false,"note":""}
+{"id":"log-21","service":"sshd","severity":"error","ambiguous":false,"note":""}
+{"id":"log-22","service":"rsync","severity":"error","ambiguous":false,"note":""}
+{"id":"log-23","service":"kernel","severity":"critical","ambiguous":true,"note":"severity: disk I/O errors suggest hardware failure, but a potentially transient failed read could be error."}
+{"id":"log-24","service":"zed","severity":"critical","ambiguous":false,"note":""}
+{"id":"log-25","service":"kernel","severity":"critical","ambiguous":true,"note":"severity: killing postgres suggests service outage, but error is plausible if only a worker died and the service recovered."}
+{"id":"log-26","service":"postgres","severity":"critical","ambiguous":false,"note":""}
+{"id":"log-27","service":"systemd","severity":"critical","ambiguous":false,"note":""}
+{"id":"log-28","service":"apcupsd","severity":"critical","ambiguous":true,"note":"severity: imminent shutdown suggests service loss, but warn is plausible for a controlled shutdown protected by UPS."}
+{"id":"log-29","service":"kernel","severity":"critical","ambiguous":false,"note":""}
+{"id":"log-30","service":"smartd","severity":"critical","ambiguous":false,"note":""}
+{"id":"ticket-01","category":"billing","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-02","category":"billing","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-03","category":"billing","urgent":true,"ambiguous":false,"note":""}
+{"id":"ticket-04","category":"billing","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-05","category":"billing","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-06","category":"billing","urgent":true,"ambiguous":false,"note":""}
+{"id":"ticket-07","category":"bug","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-08","category":"bug","urgent":true,"ambiguous":false,"note":""}
+{"id":"ticket-09","category":"bug","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-10","category":"bug","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-11","category":"bug","urgent":true,"ambiguous":false,"note":""}
+{"id":"ticket-12","category":"bug","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-13","category":"feature-request","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-14","category":"feature-request","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-15","category":"feature-request","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-16","category":"feature-request","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-17","category":"feature-request","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-18","category":"feature-request","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-19","category":"account-access","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-20","category":"account-access","urgent":true,"ambiguous":false,"note":""}
+{"id":"ticket-21","category":"account-access","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-22","category":"account-access","urgent":true,"ambiguous":false,"note":""}
+{"id":"ticket-23","category":"account-access","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-24","category":"account-access","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-25","category":"shipping","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-26","category":"shipping","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-27","category":"shipping","urgent":true,"ambiguous":false,"note":""}
+{"id":"ticket-28","category":"shipping","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-29","category":"shipping","urgent":false,"ambiguous":false,"note":""}
+{"id":"ticket-30","category":"shipping","urgent":true,"ambiguous":false,"note":""}
+{"id":"event-01","date":"2026-10-06","startTime":"14:30","durationMinutes":0,"ambiguous":false,"note":""}
+{"id":"event-02","date":"2026-09-24","startTime":"12:00","durationMinutes":0,"ambiguous":false,"note":""}
+{"id":"event-03","date":"2026-09-25","startTime":"09:00","durationMinutes":120,"ambiguous":false,"note":""}
+{"id":"event-04","date":"2026-09-29","startTime":"15:00","durationMinutes":30,"ambiguous":false,"note":""}
+{"id":"event-05","date":"2026-11-02","startTime":"07:15","durationMinutes":0,"ambiguous":false,"note":""}
+{"id":"event-06","date":"2026-09-27","startTime":"16:00","durationMinutes":120,"ambiguous":false,"note":""}
+{"id":"event-07","date":"2026-09-28","startTime":"08:00","durationMinutes":120,"ambiguous":false,"note":""}
+{"id":"event-08","date":"2026-10-15","startTime":"09:30","durationMinutes":420,"ambiguous":false,"note":""}
+{"id":"event-09","date":"2026-09-23","startTime":"17:45","durationMinutes":0,"ambiguous":false,"note":""}
+{"id":"event-10","date":"2026-10-01","startTime":"18:00","durationMinutes":90,"ambiguous":false,"note":""}
+{"id":"event-11","date":"2026-09-24","startTime":"10:15","durationMinutes":45,"ambiguous":false,"note":""}
+{"id":"event-12","date":"2026-10-08","startTime":"18:30","durationMinutes":15,"ambiguous":true,"note":"date: 10/08 could mean August 10 rather than October 8; numeric date order is unspecified."}
+{"id":"event-13","date":"2026-09-25","startTime":"11:00","durationMinutes":20,"ambiguous":false,"note":""}
+{"id":"event-14","date":"2026-09-26","startTime":"08:00","durationMinutes":0,"ambiguous":false,"note":""}
+{"id":"event-15","date":"2026-10-13","startTime":"09:40","durationMinutes":0,"ambiguous":false,"note":""}
+{"id":"event-16","date":"2026-09-28","startTime":"09:05","durationMinutes":0,"ambiguous":false,"note":""}
+{"id":"event-17","date":"2026-12-12","startTime":"20:00","durationMinutes":0,"ambiguous":false,"note":""}
+{"id":"event-18","date":"2026-09-25","startTime":"19:30","durationMinutes":180,"ambiguous":false,"note":""}
+{"id":"event-19","date":"2026-10-20","startTime":"13:00","durationMinutes":60,"ambiguous":false,"note":""}
+{"id":"event-20","date":"2026-09-24","startTime":"06:00","durationMinutes":0,"ambiguous":false,"note":""}
+{"id":"event-21","date":"2026-09-23","startTime":"20:15","durationMinutes":45,"ambiguous":false,"note":""}
+{"id":"event-22","date":"2026-09-30","startTime":"16:20","durationMinutes":0,"ambiguous":false,"note":""}
+{"id":"event-23","date":"2026-09-28","startTime":"14:00","durationMinutes":90,"ambiguous":false,"note":""}
+{"id":"event-24","date":"2026-09-30","startTime":"10:30","durationMinutes":0,"ambiguous":false,"note":""}
+{"id":"event-25","date":"2026-10-02","startTime":"13:00","durationMinutes":60,"ambiguous":false,"note":""}
+{"id":"event-26","date":"2026-10-09","startTime":"18:00","durationMinutes":1440,"ambiguous":false,"note":""}
+{"id":"event-27","date":"2026-11-30","startTime":"17:00","durationMinutes":30,"ambiguous":false,"note":""}
+{"id":"event-28","date":"2026-10-07","startTime":"08:45","durationMinutes":0,"ambiguous":false,"note":""}
+{"id":"event-29","date":"2026-11-03","startTime":"07:00","durationMinutes":0,"ambiguous":false,"note":""}
+{"id":"event-30","date":"2026-09-26","startTime":"18:30","durationMinutes":0,"ambiguous":false,"note":""}

@@ -1,0 +1,9 @@
+{"id": "ticket-dev-01", "text": "I ordered the blue shirt yesterday. Could you tell me when you expect it to ship? No rush.", "expected": {"category": "shipping", "urgent": false}}
+{"id": "ticket-dev-02", "text": "My account was hacked and they are deleting all my company's projects right now! Please lock it immediately!", "expected": {"category": "account-access", "urgent": true}}
+{"id": "ticket-dev-03", "text": "The alignment on the settings page is slightly off when viewed on an iPad portrait mode.", "expected": {"category": "bug", "urgent": false}}
+{"id": "ticket-dev-04", "text": "Can I get a copy of my invoice from last month for my accounting team?", "expected": {"category": "billing", "urgent": false}}
+{"id": "ticket-dev-05", "text": "It would be super helpful if we could export the user list to CSV. Any plans to add this?", "expected": {"category": "feature-request", "urgent": false}}
+{"id": "ticket-dev-06", "text": "Our entire team is getting a 500 Internal Server Error when trying to access the main dashboard. We are completely blocked from working.", "expected": {"category": "bug", "urgent": true}}
+{"id": "ticket-dev-07", "text": "I forgot my password and the reset email is not arriving. Can you help me get back in?", "expected": {"category": "account-access", "urgent": false}}
+{"id": "ticket-dev-08", "text": "The medical supplies I ordered were guaranteed for delivery by 8 AM this morning. It is a matter of life and death for our clinic today, where are they?!", "expected": {"category": "shipping", "urgent": true}}
+{"id": "ticket-dev-10", "text": "Can you add a dark mode? My eyes hurt at night.", "expected": {"category": "feature-request", "urgent": false}}

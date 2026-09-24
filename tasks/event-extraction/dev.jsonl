@@ -1,0 +1,10 @@
+{"id": "event-dev-01", "text": "Let's do a quick sync tomorrow at 10, should take 30 minutes.", "expected": {"date": "2026-09-24", "startTime": "10:00", "durationMinutes": 30}}
+{"id": "event-dev-02", "text": "The dentist appointment is on Monday at 2pm.", "expected": {"date": "2026-09-28", "startTime": "14:00", "durationMinutes": 0}}
+{"id": "event-dev-03", "text": "We have a team lunch next Tuesday from noon until 1:30 PM.", "expected": {"date": "2026-09-29", "startTime": "12:00", "durationMinutes": 90}}
+{"id": "event-dev-04", "text": "System maintenance window starts on 2026-11-05 at 23:00 and will last for 4 hours.", "expected": {"date": "2026-11-05", "startTime": "23:00", "durationMinutes": 240}}
+{"id": "event-dev-05", "text": "Can we meet this Thursday at 4? It'll only take 15 mins.", "expected": {"date": "2026-09-24", "startTime": "16:00", "durationMinutes": 15}}
+{"id": "event-dev-06", "text": "Piano lesson on Saturday morning at 9am. It is an hour long.", "expected": {"date": "2026-09-26", "startTime": "09:00", "durationMinutes": 60}}
+{"id": "event-dev-07", "text": "Catch up with Sarah over coffee on Friday at 8:30am.", "expected": {"date": "2026-09-25", "startTime": "08:30", "durationMinutes": 0}}
+{"id": "event-dev-08", "text": "Board meeting is scheduled for October 15th, running from 1pm to 5pm.", "expected": {"date": "2026-10-15", "startTime": "13:00", "durationMinutes": 240}}
+{"id": "event-dev-09", "text": "Dinner reservation for today at 6. We will be there for 120 minutes.", "expected": {"date": "2026-09-23", "startTime": "18:00", "durationMinutes": 120}}
+{"id": "event-dev-10", "text": "Flight departs at 06:45 on Sunday.", "expected": {"date": "2026-09-27", "startTime": "06:45", "durationMinutes": 0}}

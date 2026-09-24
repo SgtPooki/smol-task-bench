@@ -16,3 +16,9 @@ done
 python3 bench.py run --label qwen3-4b --base-url $O --model qwen3:4b --tasks $TEXT --extra '{"reasoning_effort":"none"}'
 # thinking mode is slow (about 100 s per event item on an M1 Max), so it also runs constrained only
 python3 bench.py run --label qwen3-4b-thinking --base-url $O --model qwen3:4b --tasks $TEXT
+# instruction placement check: task instructions in the user message instead of a system message
+for m in "apple-fm http://localhost:1976/v1 system" "gemma3-4b $O gemma3:4b" "qwen2.5vl-3b $O qwen2.5vl:3b" "llama3.2-3b $O llama3.2:3b"; do
+  set -- $m
+  python3 bench.py run --label $1-userinst --base-url $2 --model $3 --tasks $TEXT --instructions-in-user
+done
+python3 bench.py run --label qwen3-4b-userinst --base-url $O --model qwen3:4b --tasks $TEXT --extra '{"reasoning_effort":"none"}' --instructions-in-user

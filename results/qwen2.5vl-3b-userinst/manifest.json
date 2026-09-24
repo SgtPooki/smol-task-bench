@@ -1,0 +1,47 @@
+{
+  "config": {
+    "model": "qwen2.5vl:3b",
+    "base_url": "http://localhost:11434/v1",
+    "extra": {},
+    "constrained": true,
+    "scorer_version": 3,
+    "task_hashes": {
+      "event-extraction": "1a7c6adc8c075cdf3521724f32b71293cb7311b71ce7d1ac487b5f936ea6786a",
+      "log-triage": "43b992d62ce0d00054ebc329a561565d24d14938af779491298c3276302ee908",
+      "support-tickets": "27d7e0a7b44205a43fb6434cc18880776fef061137dc822cdaec7991453b9692"
+    },
+    "instructions_in_user": true
+  },
+  "created": "2026-09-24T02:02:40+00:00",
+  "host": {
+    "platform": "macOS-27.0-arm64-arm-64bit-Mach-O",
+    "macos": "27.0",
+    "macos_build": "26A428",
+    "machine": "arm64",
+    "hw_model": "MacBookPro18,2",
+    "cpu": "Apple M1 Max",
+    "memory_bytes": "68719476736",
+    "python": "3.14.7"
+  },
+  "server": {
+    "model": {
+      "id": "qwen2.5vl:3b",
+      "object": "model",
+      "created": 1790190123,
+      "owned_by": "library"
+    },
+    "ollama_version": "0.34.3",
+    "digest": "fb90415cde1ef08aa669ae74b082d49b158729b6db1ab183c941417d507e71a1",
+    "details": {
+      "parent_model": "",
+      "format": "gguf",
+      "family": "qwen25vl",
+      "families": [
+        "qwen25vl"
+      ],
+      "parameter_size": "3.8B",
+      "quantization_level": "Q4_K_M"
+    },
+    "context_length": 128000
+  }
+}
