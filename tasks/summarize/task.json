@@ -1,0 +1,21 @@
+{
+  "name": "summary",
+  "description": "Short incident reports, meeting notes, release notes, escalation emails, and lab updates to summarize under a word limit. Scored by required facts present, plausible wrong details absent, and the word limit. Written by Gemini 3.1 Pro; required facts appear verbatim in each source, forbidden details appear nowhere in it, and a gpt-6-astra summary met every item's constraints.",
+  "instructions": "You summarize documents faithfully and concisely. summary must stay within the stated word limit, keep the key facts (dates, numbers, names, systems) exactly as written in the document, and add nothing that isn't in the document.",
+  "prompt": "{text}",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "summary": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "summary"
+    ],
+    "additionalProperties": false
+  },
+  "fields": {
+    "summary": "constraints"
+  }
+}
