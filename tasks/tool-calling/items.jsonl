@@ -1,0 +1,20 @@
+{"id": "tool-01", "text": "What is the weather like in Tokyo today?", "expected": {"calls": [{"tool": "getWeather", "args": {"city": "Tokyo"}}], "answerContains": ["15\u00b0C"]}}
+{"id": "tool-02", "text": "When will my order ORD-102 arrive?", "expected": {"calls": [{"tool": "lookupOrder", "args": {"orderId": "ORD-102"}}], "answerContains": ["2026-10-05"]}}
+{"id": "tool-03", "text": "Convert 100 USD to JPY.", "expected": {"calls": [{"tool": "convertCurrency", "args": {"amount": 100, "from": "USD", "to": "JPY"}}], "answerContains": ["15000.00"]}}
+{"id": "tool-04", "text": "I need to know the weather for Dubai.", "expected": {"calls": [{"tool": "getWeather", "args": {"city": "Dubai"}}], "answerContains": ["35\u00b0C"]}}
+{"id": "tool-05", "text": "Can you check the status of ORD-104?", "expected": {"calls": [{"tool": "lookupOrder", "args": {"orderId": "ORD-104"}}], "answerContains": ["Cancelled"]}}
+{"id": "tool-06", "text": "How much is 50 EUR in GBP?", "expected": {"calls": [{"tool": "convertCurrency", "args": {"amount": 50, "from": "EUR", "to": "GBP"}}], "answerContains": ["44.44"]}}
+{"id": "tool-07", "text": "Tell me the weather in Paris.", "expected": {"calls": [{"tool": "getWeather", "args": {"city": "Paris"}}], "answerContains": ["Rainy"]}}
+{"id": "tool-08", "text": "I want to convert 200 GBP to USD.", "expected": {"calls": [{"tool": "convertCurrency", "args": {"amount": 200, "from": "GBP", "to": "USD"}}], "answerContains": ["250.00"]}}
+{"id": "tool-09", "text": "What's the weather in Seattle and London?", "expected": {"calls": [{"tool": "getWeather", "args": {"city": "Seattle"}}, {"tool": "getWeather", "args": {"city": "London"}}], "answerContains": ["9\u00b0C", "10\u00b0C"]}}
+{"id": "tool-10", "text": "Convert 100 EUR to USD and also check my order ORD-101.", "expected": {"calls": [{"tool": "convertCurrency", "args": {"amount": 100, "from": "EUR", "to": "USD"}}, {"tool": "lookupOrder", "args": {"orderId": "ORD-101"}}], "answerContains": ["111.11", "2026-10-01"]}}
+{"id": "tool-11", "text": "What's the weather in Sydney, and when will ORD-103 arrive?", "expected": {"calls": [{"tool": "getWeather", "args": {"city": "Sydney"}}, {"tool": "lookupOrder", "args": {"orderId": "ORD-103"}}], "answerContains": ["25\u00b0C", "2026-09-20"]}}
+{"id": "tool-12", "text": "How much is 100 USD in JPY and how much is it in EUR?", "expected": {"calls": [{"tool": "convertCurrency", "args": {"amount": 100, "from": "USD", "to": "JPY"}}, {"tool": "convertCurrency", "args": {"amount": 100, "from": "USD", "to": "EUR"}}], "answerContains": ["15000.00", "90.00"]}}
+{"id": "tool-13", "text": "Check order ORD-105 and ORD-106.", "expected": {"calls": [{"tool": "lookupOrder", "args": {"orderId": "ORD-105"}}, {"tool": "lookupOrder", "args": {"orderId": "ORD-106"}}], "answerContains": ["2026-11-15", "2026-10-03"]}}
+{"id": "tool-14", "text": "I'm going to Tokyo, what is the weather there? Also convert 500 USD to JPY.", "expected": {"calls": [{"tool": "getWeather", "args": {"city": "Tokyo"}}, {"tool": "convertCurrency", "args": {"amount": 500, "from": "USD", "to": "JPY"}}], "answerContains": ["15\u00b0C", "75000.00"]}}
+{"id": "tool-15", "text": "Check weather in Dubai and Paris.", "expected": {"calls": [{"tool": "getWeather", "args": {"city": "Dubai"}}, {"tool": "getWeather", "args": {"city": "Paris"}}], "answerContains": ["35\u00b0C", "12\u00b0C"]}}
+{"id": "tool-16", "text": "Convert 150 GBP to JPY, and check the status of ORD-102.", "expected": {"calls": [{"tool": "convertCurrency", "args": {"amount": 150, "from": "GBP", "to": "JPY"}}, {"tool": "lookupOrder", "args": {"orderId": "ORD-102"}}], "answerContains": ["28125.00", "Processing"]}}
+{"id": "tool-17", "text": "Hello! How are you doing today?", "expected": {"calls": [], "answerContains": []}}
+{"id": "tool-18", "text": "Explain what an API is in one sentence.", "expected": {"calls": [], "answerContains": []}}
+{"id": "tool-19", "text": "Write a short haiku about a robot.", "expected": {"calls": [], "answerContains": []}}
+{"id": "tool-20", "text": "What is 2 + 2?", "expected": {"calls": [], "answerContains": ["4"]}}
