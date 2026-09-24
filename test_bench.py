@@ -26,6 +26,8 @@ c = {"required": ["A-10442", "October 6"], "maxWords": 8}
 assert f("constraints", "Order a-10442 ships October 6.", c)
 assert not f("constraints", "Order A-10442 ships soon.", c)
 assert not f("constraints", "Your order A-10442 will definitely ship on October 6, sorry.", c)
+assert not f("constraints", "Order A-10442 ships October 6 or 7.", {**c, "forbidden": ["October 7", " or 7"]})
+assert f("constraints", "Order A-10442 ships October 6.", {**c, "forbidden": ["October 7"]})
 
 schema = {"type": "object", "properties": {"s": {"type": "string", "enum": ["a", "b"]}, "n": {"type": "integer"}},
           "required": ["s", "n"], "additionalProperties": False}
@@ -88,6 +90,10 @@ for d, split in [(d, s) for d in bench.TASKS.iterdir() if (d / "task.json").exis
         checked = {k: v for k, v in it["expected"].items() if t["fields"][k] != "constraints"}  # constraints aren't answers
         assert bench.schema_errors({**t["schema"], "required": list(checked)}, checked) == [], (d.name, it["id"])
         assert "image" not in it or (d / it["image"]).exists(), (d.name, it["id"])
+    if split == "test" and (d / "images").exists():  # every image belongs to an item, so items can't silently go missing
+        used = {it["image"] for it in items if "image" in it}
+        orphans = {f"images/{p.name}" for p in (d / "images").iterdir()} - used
+        assert not orphans, (d.name, "images with no item", sorted(orphans)[:3])
 
 import sys
 sys.path.append(str(Path(__file__).parent / "scripts"))

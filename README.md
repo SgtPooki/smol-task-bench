@@ -75,13 +75,22 @@ Pass extra request fields with `--extra`. For example, `--extra '{"reasoning_eff
 
 | Task | Input | Items | Scored fields | Source |
 |---|---|---|---|---|
-| `log-triage` | One syslog or app log line | 30 | `service`, `severity` | Hand-written |
-| `support-tickets` | A short customer message | 30 | `category`, `urgent` | Hand-written |
-| `event-extraction` | A message mentioning one event | 30 | `date`, `startTime`, `durationMinutes` | Hand-written |
+| `log-triage` | One syslog or app log line | 89 | `service`, `severity` | 30 hand-written; the rest written by one model (Gemini 3.1 Pro), kept only where a second model's (`gpt-6-astra`) blind labels agreed |
+| `support-tickets` | A short customer message | 99 | `category`, `urgent` | 30 hand-written; the rest written by one model (Gemini 3.1 Pro), kept only where a second model's (`gpt-6-astra`) blind labels agreed |
+| `event-extraction` | A message mentioning one event | 100 | `date`, `startTime`, `durationMinutes` | 30 hand-written; the rest written by one model (Gemini 3.1 Pro), kept only where a second model's (`gpt-6-astra`) blind labels agreed |
+| `sensitive-routing` | A benign message on a sensitive topic | 60 | `department` | Written by one model (Gemini 3.1 Pro), kept only where a second model's (`gpt-6-astra`) blind labels agreed |
+| `bookmark-tagging` | A bookmark title and description | 51 | `tags` (set) | Written by one model (Gemini 3.1 Pro), kept only where a second model's (`gpt-6-astra`) blind labels agreed |
+| `constrained-rewrite` | A draft reply, required terms, and a word limit | 40 | `text` (constraints) | Written by Gemini 3.1 Pro; each item met by a `gpt-6-astra` rewrite |
+| `summarize` | A short document and a word limit | 40 | `summary` (constraints) | Written by Gemini 3.1 Pro; each item met by a `gpt-6-astra` summary |
+| `contact-extraction` | An email with a signature and distractors | 60 | `name`, `email`, `phone`, `company` | [`scripts/make_contacts.py`](scripts/make_contacts.py) |
 | `receipts` | A receipt photo | 40 | `total`, `itemCount` | [CORD-v2](https://huggingface.co/datasets/naver-clova-ix/cord-v2) test split |
-| `receipts-synthetic` | A generated receipt image | 40 | `total`, `currency`, `date`, `itemCount` | [`scripts/make_synthetic_receipts.py`](scripts/make_synthetic_receipts.py) |
+| `receipts-synthetic` | A generated receipt image | 100 | `total`, `currency`, `date`, `itemCount` | [`scripts/make_synthetic_receipts.py`](scripts/make_synthetic_receipts.py) |
 
-Each task's `items.jsonl` is the frozen test split. The hand-written tasks also have a `dev.jsonl` split, written by a separate AI model, for tuning prompts without touching the test split (`--split dev`).
+`tool-calling` measures native tool calling through a Swift harness instead of `bench.py`; see [`tasks/tool-calling/README.md`](tasks/tool-calling/README.md).
+
+The `constraints` tasks score free text without a judge: the answer must contain every required term, contain none of the forbidden terms (plausible wrong details, for `summarize`), and stay within the word limit. The prompt states the word limit; for `summarize` it doesn't reveal which facts are required.
+
+Each task's `items.jsonl` is the frozen test split. `log-triage`, `support-tickets`, and `event-extraction` also have a `dev.jsonl` split, written by a separate AI model, for tuning prompts without touching the test split (`--split dev`).
 
 Each request sends the task's instructions as the system message and asks for JSON through `response_format: json_schema`. Every result falls into exactly one outcome:
 
@@ -95,7 +104,7 @@ Each request sends the task's instructions as the system message and asks for JS
 
 The report shows the all-fields-correct rate with a 95% Wilson confidence interval, per-field accuracy over parsed responses, the count of each outcome, and the median seconds per successful request. `--vs LABEL` adds an exact McNemar test per task, which compares two models on the same items and is more sensitive than comparing their separate intervals.
 
-With 30 to 40 items per task, a confidence interval can span up to ±18 points (the width at a 50% score with 30 items). Use the results to separate models that differ by a wide margin, not to rank near-ties.
+With 40 to 100 items per task, a 95% confidence interval spans up to ±15 points at 40 items and ±10 at 100 (the widths at a 50% score). Use the results to separate models that differ by a clear margin, not to rank near-ties.
 
 ## Add a task
 
@@ -125,6 +134,8 @@ Field scorers:
 - `number`: a numeric value within 0.5% of the expected value.
 - `time`: `HH:MM` and `HH:MM:SS` compare as the same minute.
 - `set`: order-insensitive list equality.
+- `digits`: digits-only equality, for phone numbers.
+- `constraints`: `expected` holds `required` terms, optional `forbidden` terms, and `maxWords`; the answer passes when it contains every required term, no forbidden term (case-insensitive), and at most `maxWords` words.
 
 Bump `SCORER_VERSION` in `bench.py` when scorer semantics change.
 

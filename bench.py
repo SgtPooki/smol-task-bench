@@ -111,8 +111,9 @@ def field_ok(kind, got, want):
         return is_num(got) and abs(got - want) <= 0.005 * max(1.0, abs(want))
     if kind == "digits":  # phone numbers: compare digits only
         return isinstance(got, str) and re.sub(r"\D", "", got) == re.sub(r"\D", "", want)
-    if kind == "constraints":  # want = {"required": [terms], "maxWords": n}
+    if kind == "constraints":  # want = {"required": [terms], "maxWords": n, optional "forbidden": [terms]}
         return (isinstance(got, str) and all(t.lower() in got.lower() for t in want["required"])
+                and not any(t.lower() in got.lower() for t in want.get("forbidden", []))
                 and len(got.split()) <= want["maxWords"])
     if kind == "set":  # order-insensitive list of strings
         return isinstance(got, list) and {norm(x) for x in got} == {norm(x) for x in want}
