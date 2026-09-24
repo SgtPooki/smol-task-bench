@@ -71,6 +71,8 @@ assert bench.check_resumable(old, {"model": "m", "task_hashes": {"x": "1", "y": 
 assert bench.check_resumable(old, {"model": "m", "task_hashes": {"x": "9"}}) == ["x"]  # task data changed: rerun x
 assert bench.check_resumable(old, {"model": "other", "task_hashes": {"x": "1"}}) is None  # settings changed: refuse
 
+assert "tool-calling" not in bench.http_tasks() and "log-triage" in bench.http_tasks()
+
 # the test split is frozen: changing task.json or test items requires a deliberate tasks/FROZEN.json update
 frozen = json.loads((bench.TASKS / "FROZEN.json").read_text())
 for name, h in frozen.items():

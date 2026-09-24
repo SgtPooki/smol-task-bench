@@ -25,6 +25,11 @@ def load_task(name, split="test"):
     return d, task, items
 
 
+def http_tasks(split="test"):
+    """Task directories bench.py can run: a task.json plus the split's items (tool-calling runs in swift/ instead)."""
+    return sorted(p.name for p in TASKS.iterdir() if (p / "task.json").exists() and (p / SPLITS[split]).exists())
+
+
 def task_hash(name, split="test"):
     """sha256 over task.json, the split's items file, and every referenced image."""
     d, _, items = load_task(name, split)
@@ -269,7 +274,7 @@ def check_resumable(old, new):
 
 def cmd_run(a):
     extra = json.loads(a.extra) if a.extra else {}
-    names = a.tasks.split(",") if a.tasks else sorted(p.name for p in TASKS.iterdir() if (p / SPLITS[a.split]).exists())
+    names = a.tasks.split(",") if a.tasks else http_tasks(a.split)
     label_dir = RESULTS / a.label
     if a.overwrite and label_dir.exists():
         shutil.rmtree(label_dir)
