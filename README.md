@@ -106,6 +106,14 @@ The report shows the all-fields-correct rate with a 95% Wilson confidence interv
 
 With 40 to 100 items per task, a 95% confidence interval spans up to ±15 points at 40 items and ±10 at 100 (the widths at a 50% score). Use the results to separate models that differ by a clear margin, not to rank near-ties.
 
+## Task lifecycle
+
+A task is useful only while it separates models. `python3 bench.py report` applies these rules to complete, current results on the constrained track (not the `-noschema`, `-userinst`, or `-repeat` variants) and lists what to do under "Task lifecycle":
+
+- **Ceiling:** when any model scores 100%, or its 95% Wilson lower bound reaches 90%, add a harder version of the task. Add it as a new task (for example `contact-extraction-v2`) rather than editing the frozen test split, so earlier results stay comparable.
+- **Saturated:** when every non-thinking model scores at least 95%, record the date as `"saturatedSince"` in the task's `task.json`.
+- **Deprecated:** after a task has been saturated for 365 days, set `"deprecated": true` in its `task.json`. Deprecated tasks and their results stay in the repository, but `bench.py run` skips them unless named with `--tasks`.
+
 ## Add a task
 
 A task is a directory under `tasks/` with two files.

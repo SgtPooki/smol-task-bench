@@ -63,6 +63,17 @@ lo, hi = bench.wilson(80, 100)
 assert 0.71 < lo < 0.72 and 0.86 < hi < 0.87
 assert bench.mcnemar_p(0, 5) == 0.0625 and bench.mcnemar_p(3, 3) == 1.0
 
+# task lifecycle: ceiling -> harder version; saturated -> date it; saturated a year -> deprecate
+from datetime import date
+L = bench.lifecycle_notes
+day = date(2027, 1, 1)
+assert L({"t": {"a": (60, 60), "b": (30, 60)}}, {}, day) == ["t: ceiling reached by a; add a harder version"]
+assert L({"t": {"a": (50, 60), "a-noschema": (60, 60)}}, {}, day) == []  # variants don't count
+n = L({"t": {"a": (59, 60), "b": (58, 60), "c-thinking": (20, 60)}}, {}, day)
+assert any("saturated" in x and "2027-01-01" in x for x in n), n
+assert L({"t": {"a": (58, 60), "b": (58, 60)}}, {"t": {"saturatedSince": "2025-12-01"}}, day) == ["t: saturated since 2025-12-01; deprecate it"]
+assert L({"t": {"a": (30, 60), "b": (58, 60)}}, {"t": {"saturatedSince": "2026-06-01"}}, day) == ['t: no longer saturated; remove "saturatedSince" from task.json']
+
 # resume: truncated last line from an interrupted write is dropped, not fatal
 with tempfile.TemporaryDirectory() as d:
     p = Path(d) / "t.jsonl"
