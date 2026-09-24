@@ -89,4 +89,15 @@ for d, split in [(d, s) for d in bench.TASKS.iterdir() if (d / "task.json").exis
         assert bench.schema_errors({**t["schema"], "required": list(checked)}, checked) == [], (d.name, it["id"])
         assert "image" not in it or (d / it["image"]).exists(), (d.name, it["id"])
 
+import sys
+sys.path.append(str(Path(__file__).parent / "scripts"))
+import fetch_cord
+
+assert fetch_cord.amount("60.000") == 60000
+assert fetch_cord.amount("365000.00") == 365000
+assert fetch_cord.amount("1.591.600") == 1591600
+assert fetch_cord.amount("45.500,00") == 45500
+assert fetch_cord.amount("Rp 43.000") == 43000
+assert fetch_cord.amount("") is None
+
 print("ok")
