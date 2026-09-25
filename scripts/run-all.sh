@@ -2,7 +2,7 @@
 # Reference run: Apple FM via `fm serve --port 1976`, everything else via ollama. Resumable.
 # Models run twice: constrained (response_format json_schema) and --no-schema (schema in the prompt).
 set -eux
-TEXT=bookmark-tagging,constrained-rewrite,contact-extraction,event-extraction,log-triage,sensitive-routing,support-tickets
+TEXT=bookmark-tagging,constrained-rewrite,contact-extraction,event-extraction,log-triage,sensitive-routing,summarize,support-tickets
 O=http://localhost:11434/v1
 for mode in "" --no-schema; do
   s=${mode:+-noschema}

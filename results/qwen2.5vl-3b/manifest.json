@@ -4,16 +4,24 @@
     "base_url": "http://localhost:11434/v1",
     "extra": {},
     "constrained": true,
-    "scorer_version": 3,
+    "scorer_version": 4,
     "task_hashes": {
-      "event-extraction": "1a7c6adc8c075cdf3521724f32b71293cb7311b71ce7d1ac487b5f936ea6786a",
-      "log-triage": "43b992d62ce0d00054ebc329a561565d24d14938af779491298c3276302ee908",
+      "event-extraction": "ce37d6600640f4ae8031e8d96d5ca71d485d0a0bf9c783bd78e3096f7ca12ab5",
+      "log-triage": "a375d67cf2c0024598e4761992420c87c9a220101ed5fc426b993c217f03bc5a",
       "receipts": "888bffcaf0880007512d421f7d7bf5413f85b9f0260314bb4160abfb3b15a9e9",
-      "support-tickets": "27d7e0a7b44205a43fb6434cc18880776fef061137dc822cdaec7991453b9692",
-      "receipts-synthetic": "6811bf58902d5ed5e50f9ea1e0906416c3d257e94faa9b6a00cfeb3fe9615dd7"
+      "support-tickets": "649fee5bbd8940b9395059b95fd72161af2b2fb2dca92ae653146445509de2fb",
+      "receipts-synthetic": "b109277d1a09956ee8d0ac9802ee8e0f269adc6f765659982ab6e6ab711959d3",
+      "bookmark-tagging": "9273426782a9b9129298323bd3a0ced3c6a8224bc31d366bb590d81eb0f784e3",
+      "constrained-rewrite": "a883ec84d37801c9de8710b63a56d38659c6ff7d7f024c0d233a47506ef870b0",
+      "contact-extraction": "370bb967c6309bd00f51d2eb3fd659ef98980a8eb90f8ae7fff483630a4bcb74",
+      "sensitive-routing": "a71378dae43b8b53570651693cb4b83b869561ed2787bf9c2898ad13cd4b9466",
+      "summarize": "7dc222e8e2458d8dfe9aba27fe0ff9a2357197c2da9918731c198a04479998f8",
+      "contact-extraction-v2": "2d79c3133c6354a3962bb4e240db74e5c621dd01c57da230acfdb102569d97b5",
+      "sensitive-routing-v2": "f2bf4579ed5da0264452b879e35769ba69abf3b5ae4d39be59e002faf9ff9755",
+      "support-tickets-v2": "089cced74008061d5128fc436d74281b647bee4b90bde229b0ef0e426714883f"
     }
   },
-  "created": "2026-09-24T01:19:18+00:00",
+  "created": "2026-09-25T01:01:50+00:00",
   "host": {
     "platform": "macOS-27.0-arm64-arm-64bit-Mach-O",
     "macos": "27.0",
