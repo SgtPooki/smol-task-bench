@@ -7,32 +7,44 @@ It targets Apple's on-device Foundation Model (`fm serve` on macOS 27) and compa
 ## Results
 
 <!-- results:start -->
-Run on 2026-09-23 on a MacBook Pro (M1 Max, 64 GB), macOS 27.0 (26A428), ollama 0.34.3. The test split is frozen in [`tasks/FROZEN.json`](tasks/FROZEN.json).
+Run on 2026-09-24 on a MacBook Pro (M1 Max, 64 GB), macOS 27.0 (26A428), ollama 0.34.3. The test split is frozen in [`tasks/FROZEN.json`](tasks/FROZEN.json); raw answers and per-label manifests are in [`results/`](results/).
 
-Share of items with every field correct, constrained track (`response_format: json_schema`), with median seconds per item:
+Share of items with every field correct on the constrained track (`response_format: json_schema`). **Bold** marks the best model without thinking; `R` counts refusals and `O` counts runaway generations (`overflow`) among the misses. *qwen3:4b with thinking answered only the first 30 items of each text task and wasn't run on the v2 tasks, because each answer takes 11 to 180 seconds.
 
-| Model | log-triage | support-tickets | event-extraction | receipts (CORD) | receipts-synthetic |
-|---|---|---|---|---|---|
-| Apple FM (`fm serve`) | 70.0% (0.87 s) | 86.7% (0.72 s) | 33.3% (1.50 s) | 55.0% (2.56 s) | 25.0% (3.35 s) |
-| gemma3:4b | 66.7% (0.53 s) | 93.3% (0.64 s) | 70.0% (0.84 s) | 27.5% (2.71 s) | 22.5% (3.09 s) |
-| llama3.2:3b | 63.3% (0.26 s) | 86.7% (0.29 s) | 73.3% (0.49 s) | text only | text only |
-| qwen2.5vl:3b | 70.0% (0.26 s) | 76.7% (0.29 s) | 56.7% (0.64 s) | 77.5% (4.45 s) | 47.5% (3.36 s) |
-| qwen3:4b, thinking off | 90.0% (0.34 s) | 90.0% (0.41 s) | 40.0% (0.83 s) | text only | text only |
-| qwen3:4b, thinking on | 93.3% (13.12 s) | 100.0% (11.27 s) | 100.0% (97.68 s) | text only | text only |
+| Task | Apple FM | gemma3:4b | qwen2.5vl:3b | llama3.2:3b | phi4-mini | granite3.3:2b | smollm2:1.7b | qwen3:4b | qwen3:4b thinking* |
+|---|---|---|---|---|---|---|---|---|---|
+| `log-triage` | 75% | 70% | 76% | 72% | 72% | 64% | 62% | **90%** | 93% |
+| `support-tickets` | 88% (2R) | 95% | 84% | 86% | **96%** | 88% | 49% | 91% | 93% |
+| `support-tickets-v2` | 76% (3R) | **91%** | 84% | 84% | 76% | 81% | 22% | 83% | n/a |
+| `sensitive-routing` | 48% (29R) | **98%** | 97% | 90% | 87% | 92% | 82% | 93% | 100% |
+| `sensitive-routing-v2` | 35% (30R) | 58% | 63% | 55% | 62% | **67%** | 43% | 62% | n/a |
+| `event-extraction` | 32% (25O) | **70%** | 48% | 61% | 32% | 42% | 12% | 33% | 100% |
+| `contact-extraction` | **100%** | 98% | 78% | 90% | 50% | 98% | 60% | 85% | 100% |
+| `contact-extraction-v2` | 82% | **95%** | 40% | 68% | 47% | 58% | 8% | 77% | n/a |
+| `bookmark-tagging` | **37%** | **37%** | 33% | 24% | **37%** | 33% | 0% | 31% | 37% |
+| `constrained-rewrite` | **85%** (1R) | 55% (15O) | 15% | 20% | 20% | 12% | 0% (4O) | 10% | 100% |
+| `summarize` | 10% (1R) | 22% (6O) | 2% (9O) | **28%** | 10% | 2% | 0% | 8% | 27% |
+| `receipts` | 55% | 28% | **78%** | n/a | n/a | n/a | n/a | n/a | n/a |
+| `receipts-synthetic` | 22% | 22% | **44%** | n/a | n/a | n/a | n/a | n/a | n/a |
+| Median seconds per answered item | 1.44 | 1.00 | 0.61 | 0.37 | 0.44 | 0.33 | 0.32 | 0.55 | 23.85 |
 
-With 30 to 40 items per task, most differences under about 20 points are not significant. Paired McNemar tests against Apple FM (`python3 bench.py report --vs apple-fm`) find:
+Paired McNemar tests against Apple FM (`python3 bench.py report --vs apple-fm`) support these findings at p < 0.05:
 
-- **log-triage and support-tickets:** no model without thinking differs significantly from Apple FM (p ≥ 0.109).
-- **event-extraction:** gemma3:4b, llama3.2:3b, and qwen2.5vl:3b beat Apple FM (p ≤ 0.016). 10 of Apple FM's 30 answers are `overflow`: guided generation loops until it fills the context window when the schema lacks `fm`'s `"x-order"` key ([#21](https://github.com/SgtPooki/smol-task-bench/issues/21)). Its field accuracy on the items it did answer is 81.7%.
-- **receipts (CORD):** qwen2.5vl:3b beats Apple FM (p = 0.035), and Apple FM beats gemma3:4b (p = 0.019). gemma3:4b reads 37 of 40 totals correctly but counts item lines correctly on only 12.
-- **receipts-synthetic:** qwen2.5vl:3b beats Apple FM (p = 0.049). Apple FM reads all 12 yen totals correctly but only 3 of 28 totals with cents: it drops or misplaces the decimal point (for example 108.45 read as 10845). qwen2.5vl:3b reads all 40 totals correctly. Item-line counting is the hardest field for every model (10 to 25 of 40).
-- **Thinking:** qwen3:4b with thinking on is the most accurate model on every text task, at 11 to 98 seconds per item.
+- **Refusals are Apple FM's biggest practical cost.** On `sensitive-routing`, benign messages about medication, security incidents, legal paperwork, and crisis resources, it refuses 29 of 60 v1 items and 30 of 60 v2 items; every other model routes significantly better on both versions.
+- **Apple FM follows output constraints best.** It keeps every required term within the word limit on 85% of `constrained-rewrite` items, ahead of every other model (p ≤ 0.004), and scores 100% on `contact-extraction` v1 and 82% on v2, behind only gemma3:4b on v2 (95%, p = 0.021).
+- **Event extraction is where Apple FM loses.** 25 of its 100 answers loop until the context fills, because `fm serve` mishandles schemas without `"x-order"` ([#21](https://github.com/SgtPooki/smol-task-bench/issues/21)); gemma3:4b, llama3.2:3b, and qwen2.5vl:3b beat it. Without the schema it scores 41% with no overflows.
+- **Receipts favor qwen2.5vl:3b** (78% on CORD, 44% synthetic), which beats Apple FM on both. Apple FM reads totals without cents well but drops or misplaces decimal points in totals with cents.
+- **Summarization is hard for every model** (0% to 28%). Apple FM usually keeps the required facts but runs over the word limit (32 of 40 misses); llama3.2:3b stays short but drops facts (27 of 40). No model wrote a planted wrong detail.
+- **Thinking buys accuracy at 20 to 100 times the latency.** qwen3:4b with thinking is the most accurate on most text tasks it ran, at a median of 23 seconds per item.
 
-The `--no-schema` track sends the JSON Schema in the system prompt instead. It removes Apple FM's overflows on event-extraction (46.7% correct, 0 overflows) but introduces schema failures elsewhere: Apple FM answers `"type"` instead of `"category"` on 27 of 30 support tickets (10.0% correct), and llama3.2:3b echoes the schema back on 24 of 30 event items. These failures depend on how the prompt presents the schema, so treat the no-schema track as a measure of what constrained decoding contributes, not of each model's ceiling. qwen3:4b has no no-schema results because ollama 0.34.3 only disables its thinking together with `response_format`.
+Other checks from the same run:
 
-Moving the task instructions from the system message into the user message (`--instructions-in-user`) changes no model's score significantly on any text task (p ≥ 0.125), so the reference runs keep the system message.
+- **Schema vs no schema:** across the tasks run both ways, dropping the schema (`--no-schema`) changes the mean score by +2 points for gemma3:4b and qwen2.5vl:3b, 0 for granite3.3:2b, and -7 to -23 points for Apple FM, llama3.2:3b, smollm2:1.7b, and phi4-mini. Constrained decoding does the most for the weaker models.
+- **Instruction placement:** moving instructions into the user message (`--instructions-in-user`, first 30 items per task) changes no model's score significantly (p ≥ 0.093).
+- **Repeatability:** a second run of Apple FM and gemma3:4b (first 30 items per task) reproduced every answer's content on 300 of 300 items; Apple FM only reorders JSON keys between runs.
+- **Native tool calling:** Apple FM passes 17 of 20 [`tool-calling`](tasks/tool-calling/README.md) items through the Swift `FoundationModels` API, including all 16 that need tools.
 
-`python3 bench.py report` prints every column for every label, including each failure type.
+The v2 tasks exist because the [task lifecycle](#task-lifecycle) rule flagged their v1 versions at the ceiling.
 <!-- results:end -->
 
 ## Run it

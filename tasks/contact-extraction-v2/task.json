@@ -1,0 +1,36 @@
+{
+  "name": "contact",
+  "description": "Harder generated emails: forwarded threads with a second signature, obfuscated emails, extensions, mobile plus direct lines, and 'Last, First' names (scripts/make_contacts_v2.py). Labels are exact by construction.",
+  "instructions": "You extract the sender's contact details from an email. The sender is the person who wrote the newest message at the top; ignore signatures inside forwarded or quoted messages. name is the sender's name as 'First Last' even if the signature writes 'Last, First'. email is the sender's address in normal form (for example 'alice at acme dot example dot com' is alice@acme.example.com). phone is the sender's mobile or cell number as digits only with no country code or extension (for example '(415) 555-0142' is 4155550142); if both a mobile and a direct line are listed, use the mobile; ignore main office and fax lines. company is the sender's company name as written.",
+  "prompt": "Email:\n{text}",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string"
+      },
+      "phone": {
+        "type": "string"
+      },
+      "company": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "name",
+      "email",
+      "phone",
+      "company"
+    ],
+    "additionalProperties": false
+  },
+  "fields": {
+    "name": "exact",
+    "email": "exact",
+    "phone": "digits",
+    "company": "exact"
+  }
+}

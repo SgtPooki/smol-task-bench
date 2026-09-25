@@ -1,0 +1,33 @@
+{
+  "name": "support_ticket",
+  "description": "Harder version of support-tickets: multi-issue messages, sarcasm or understatement hiding urgency, deadline-implied urgency, and longer text. Written by Gemini 3.1 Pro and kept only where gpt-6-astra's blind labels agreed.",
+  "instructions": "You route customer support messages. category is one of: billing (charges, invoices, plans, discounts), bug (the product is broken or behaves wrongly), feature-request (asking for new functionality), account-access (login, passwords, 2FA, admins, account changes or security), shipping (physical orders and deliveries). urgent is true only if the customer faces serious harm, data loss, a security compromise, a hard deadline within about a day, or many users blocked from core functionality; otherwise false.",
+  "prompt": "Message:\n{text}",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "category": {
+        "type": "string",
+        "enum": [
+          "billing",
+          "bug",
+          "feature-request",
+          "account-access",
+          "shipping"
+        ]
+      },
+      "urgent": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "category",
+      "urgent"
+    ],
+    "additionalProperties": false
+  },
+  "fields": {
+    "category": "exact",
+    "urgent": "exact"
+  }
+}
