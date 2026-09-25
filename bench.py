@@ -93,7 +93,10 @@ def call(base_url, body, timeout):
         choice = resp["choices"][0]
         if choice.get("finish_reason") == "length":  # cut off at max_tokens: a runaway, like fm serve's overflow
             return None, f"{OVERFLOW} (max_tokens)", time.monotonic() - t
-        return choice["message"].get("content") or "", None, time.monotonic() - t
+        content = choice["message"].get("content") or ""
+        if not content.strip() and not (resp.get("usage") or {}).get("completion_tokens"):
+            return None, "empty response from server", time.monotonic() - t  # nothing generated: retryable hiccup
+        return content, None, time.monotonic() - t
     except urllib.error.HTTPError as e:
         return None, f"HTTP {e.code}: {e.read()[:2000].decode(errors='replace')}", time.monotonic() - t
     except Exception as e:
@@ -171,7 +174,8 @@ def outcome(rec):
         err = (rec["error"] or "").lower()
         if "guardrail" in err or "refused to answer" in err:  # fm serve's two refusal messages
             return "refusal"
-        if "exceeded the model's context size" in err or OVERFLOW.lower() in err:  # runaway generation
+        runaway = ("exceeded the model's context size", OVERFLOW.lower(), "token repeat limit reached")  # fm, cap, ollama
+        if any(m in err for m in runaway):  # runaway generation
             return "overflow"
         return "transport"
     if not rec["json_ok"]:

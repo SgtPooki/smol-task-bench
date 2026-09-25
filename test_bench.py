@@ -50,6 +50,7 @@ assert bench.outcome(rec(None, 'HTTP 500: {"error":{"message":"The model refused
 assert bench.outcome(rec(None, "TimeoutError()")) == "transport"
 assert bench.outcome(rec(None, "HTTP 500: The session's transcript exceeded the model's context size.")) == "overflow"
 assert bench.outcome(rec(None, bench.OVERFLOW + " (max_tokens)")) == "overflow"
+assert bench.outcome(rec(None, 'HTTP 500: {"error":{"message":"prediction aborted, token repeat limit reached"}}')) == "overflow"
 
 b = bench.request_body("m", {"name": "n", "instructions": "I", "schema": schema}, "hi", {})
 assert b["response_format"]["json_schema"]["schema"] == schema and b["stream"] is False and b["max_tokens"] == bench.MAX_TOKENS
